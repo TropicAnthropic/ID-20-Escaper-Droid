@@ -6,6 +6,7 @@
 #define PLAYER_DROID            9
 #define PLAYER_BULLET           10
 #define PLAYER_IMUNE_TIME       30
+#define PLAYER_TRANSPORT_TIMER  0
 
 #define PLAYER                  1
 
@@ -19,6 +20,7 @@ struct EscaperDroid
     byte steps;
     byte assets;
     byte isOnTile;
+    byte transportTimer;
 
     void set()
     {
@@ -46,6 +48,7 @@ struct EscaperDroid
       //         |└------->  6   | this 2 bites are used for the amount of black cards
       //         └-------->  7   reserved
       isOnTile = TILE_GAME_STARTS_ON;
+      transportTimer = PLAYER_TRANSPORT_TIMER;
     }
 };
 
@@ -110,11 +113,30 @@ void updatePlayer()
   }
 }
 
-void playerTurnAround()
+void playerTransporting()
 {
-  byte test = ((player.characteristics & 0b00000011) + 2) & 0b00000011;
-  Serial.println(test,BIN);
-  player.characteristics = (player.characteristics & 0b00000011) + (test);
+  globalCounter++;
+  player.transportTimer++;
+  if (player.transportTimer > 4)
+  {
+    if ((player.characteristics & 0b00000011) > 2)
+    {
+      player.characteristics = player.characteristics & 0b11111100;
+    }
+    else if ((player.characteristics & 0b00000011) < 3)
+    {
+      player.characteristics++;
+    }
+    player.transportTimer = 0;
+  }
+
+  if (globalCounter > 90)
+  {
+    player.characteristics  |= 0b00000100;
+    globalCounter = 0;
+    player.transportTimer = 0;
+    gameState = STATE_GAME_PLAYING;
+  }
 }
 
 
@@ -123,6 +145,10 @@ void drawPlayer()
   if (bitRead(player.characteristics, 2))
   {
     sprites.drawPlusMask(player.x, player.y, droid_plus_mask, player.characteristics & 0b00000011);
+    if (player.transportTimer > 0)
+    {
+      sprites.drawPlusMask(player.x, player.y, transportBeams_plus_mask, player.characteristics & 0b00000011);
+    }
   }
 }
 

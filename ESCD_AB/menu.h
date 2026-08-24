@@ -14,8 +14,11 @@ void stateMenuIntro()
 {
   globalCounter++;
   //sprites.drawSelfMasked(34, 4, T_arg, 0);
-  if (globalCounter > 180) gameState = STATE_MENU_MAIN;
-  gameState = STATE_MENU_MAIN;
+  //if (globalCounter > 180)
+  //{
+  //  globalCounter = 0;
+    gameState = STATE_MENU_MAIN;
+  //}
 }
 
 void stateMenuMain()

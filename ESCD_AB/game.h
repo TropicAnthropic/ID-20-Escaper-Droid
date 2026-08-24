@@ -102,14 +102,20 @@ void stateGameOver()
 
 void stateGameTransporting()
 {
-  //playerTurnAround();
-  currentRoom = transportToRoom(currentRoom);
-  player.x = translateTileToX (player.isOnTile) ;
-  player.y = translateTileToY (player.isOnTile) + currentRoomY ;
-  player.steps = 0;
-  enterRoom(currentRoom, level);
+  playerTransporting();
+  drawWalls();
+  drawFloor();
+  drawHUD();
+  drawPlayer();
+  if (globalCounter == 0)
+  {
+    currentRoom = transportToRoom(currentRoom);
+    player.x = translateTileToX (player.isOnTile) ;
+    player.y = translateTileToY (player.isOnTile) + currentRoomY ;
+    player.steps = 0;
+    enterRoom(currentRoom, level);
+  }
   //checkOrderOfObjects(currentRoom, level);
-  gameState = STATE_GAME_PLAYING;
 }
 
 #endif
