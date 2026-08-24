@@ -86,7 +86,9 @@ void stateGameNextLevel()
 
 void stateGamePause()
 {
-  sprites.drawSelfMasked(0, 0, pauseScreen, 0);
+  drawWalls();
+  drawFloor();
+  drawHUD();
   drawNumbers(43, 54, scorePlayer, BIG_FONT);
   if (arduboy.justPressed(A_BUTTON | B_BUTTON)) gameState = STATE_GAME_PLAYING;
 }

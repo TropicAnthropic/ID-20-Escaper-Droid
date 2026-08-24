@@ -74,7 +74,13 @@ void checkInputs()
   if (arduboy.justPressed(A_BUTTON))gameState = STATE_GAME_PAUSE;
   if (arduboy.justPressed(B_BUTTON))
   {
-
+    // do an action
+    // 
+    // possible actions are:
+    // switch a switch
+    // shoot a bullet
+    // use a black key card
+    // use a white key card
   }
 }
 

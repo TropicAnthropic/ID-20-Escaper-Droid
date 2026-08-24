@@ -54,7 +54,7 @@
 Arduboy2Base arduboy;
 Sprites sprites;
 
-byte gameState = STATE_MENU_INTRO;   // start the game with the TEAM a.r.g. logo
+byte gameState = STATE_MENU_INTRO;   // start the game with the intro logo
 byte menuSelection = STATE_MENU_PLAY; // PLAY menu item is pre-selected
 byte globalCounter = 0;
 byte level;

@@ -1,11 +1,12 @@
 /*
-  Escaper Droid: http://www.team-arg.org/escd-manual.html
-
-  Arduboy version 0.5:  http://www.team-arg.org/escd-downloads.html
-
-  MADE by TEAM a.r.g. : http://www.team-arg.org/About.html
-
+  Escaper Droid
+  Arduboy version 0.6.1
+  
+  STARTED by TEAM a.r.g.
   2016 - JO3RI - STG
+
+  CONTINUED by
+  2026 - JO3RI
 
   Game License: MIT : https://opensource.org/licenses/MIT
 
