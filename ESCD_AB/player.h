@@ -37,7 +37,7 @@ struct EscaperDroid
       imuneTimer = PLAYER_IMUNE_TIME;
       steps = 0;
       life = 2;
-      assets = 0b00000000;
+      assets = 0b10000000;
       //         ||||||||
       //         |||||||└->  0  \ 
       //         ||||||└-->  1   | this 3 bits are used for amount of shots
@@ -45,8 +45,8 @@ struct EscaperDroid
       //         ||||└---->  3  \
       //         |||└----->  4   | this 2 bits are used for amount of white cards
       //         ||└------>  5  \
-      //         |└------->  6   | this 2 bites are used for the amount of black cards
-      //         └-------->  7   reserved
+      //         |└------->  6   | this 2 bits are used for the amount of black cards
+      //         └-------->  7   - this 1 bit is used to change direction button scheme 0 = A & 1 = B
       isOnTile = TILE_GAME_STARTS_ON;
       transportTimer = PLAYER_TRANSPORT_TIMER;
     }

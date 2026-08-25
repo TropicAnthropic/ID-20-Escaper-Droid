@@ -41,7 +41,22 @@ void stateMenuMain()
 
 void stateMenuHelp()
 {
-  if (arduboy.justPressed(A_BUTTON | B_BUTTON)) gameState = STATE_MENU_MAIN;
+    drawTitleScreen();
+  if (arduboy.everyXFrames(2))
+  {
+    selectorX++;
+    selectorX2--;
+  }
+  //if (selectorX > 34)selectorX = 17;
+  //if (selectorX2 < 18)selectorX2 = 35;
+  //sprites.drawPlusMask(selectorX + (buttonSchemeChoice * 24) + 40, 56, selector_plus_mask, 0);
+  //sprites.drawPlusMask(selectorX2 + (buttonSchemeChoice * 24) + 40, 56, selector_plus_mask, 0);
+  //if (arduboy.justPressed(RIGHT_BUTTON)) buttonSchemeChoice = TRUE;
+  //if (arduboy.justPressed(LEFT_BUTTON)) buttonSchemeChoice = FALSE;
+  //if (arduboy.justPressed(A_BUTTON | B_BUTTON))
+  {
+    gameState = STATE_MENU_MAIN;
+  }
 }
 
 void stateMenuInfo()

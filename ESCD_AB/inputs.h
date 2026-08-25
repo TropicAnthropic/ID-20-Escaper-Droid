@@ -5,6 +5,12 @@
 #include "player.h"
 #include "collision.h"
 
+PROGMEM const unsigned char buttonScheme[] =
+{
+  UP_BUTTON, RIGHT_BUTTON, DOWN_BUTTON, LEFT_BUTTON,
+  LEFT_BUTTON, UP_BUTTON, RIGHT_BUTTON, DOWN_BUTTON
+};
+
 
 void checkInputs()
 {
@@ -13,7 +19,7 @@ void checkInputs()
     byte testingTile = tileFromXY(player.x, player.y - currentRoomY);
     if (testingTile < 25) player.isOnTile = tileFromXY(player.x, player.y - currentRoomY);
     //Serial.println(player.isOnTile);
-    if (arduboy.pressed(UP_BUTTON))
+    if (arduboy.pressed(pgm_read_byte(&buttonScheme[NORTH+4*bitRead(player.assets,7)])))
     {
       bitClear(player.characteristics, 0);
       bitClear(player.characteristics, 1);
@@ -28,7 +34,7 @@ void checkInputs()
     }
 
 
-    else if (arduboy.pressed(RIGHT_BUTTON))
+    else if (arduboy.pressed(pgm_read_byte(&buttonScheme[EAST+4*bitRead(player.assets,7)])))
     {
       bitSet(player.characteristics, 0);
       bitClear(player.characteristics, 1);
@@ -42,7 +48,7 @@ void checkInputs()
       }
     }
 
-    else if (arduboy.pressed(DOWN_BUTTON))
+    else if (arduboy.pressed(pgm_read_byte(&buttonScheme[SOUTH+4*bitRead(player.assets,7)])))
     {
       bitClear(player.characteristics, 0);
       bitSet(player.characteristics, 1);
@@ -56,7 +62,7 @@ void checkInputs()
       }
     }
 
-    else if (arduboy.pressed(LEFT_BUTTON))
+    else if (arduboy.pressed(pgm_read_byte(&buttonScheme[WEST+4*bitRead(player.assets,7)])))
     {
       bitSet(player.characteristics, 0);
       bitSet(player.characteristics, 1);

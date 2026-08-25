@@ -7,11 +7,11 @@ Code for the game Escaper Droid for Arduboy
     - [ ] Check collision type
     - [ ] return collision type
     - [ ] Action according to type
-        - [ ] activate transport modus
         - [ ] Open Closed room door
         - [ ] Open Closed level door
         - [ ] Switch ON/OFF
         - [ ] Shoot bullet
+        - [ ] Do nothing
 - [ ] Change pause screen
     - [x] Remove pause bitmap
     - [x] Show Empty room
@@ -29,3 +29,33 @@ Code for the game Escaper Droid for Arduboy
     - [x] add bitmap with circles around the droid
     - [x] make the bitmap circles move upwards
     - [ ] change the transport modus from walk against, to press action button
+- [ ] Add soundfx
+    - [ ] Shooting
+    - [ ] Transporting
+- [ ] Change GAME OVER screen
+    - [ ] Remove game over bitmap.
+    - [ ] Show the droid dying, turning around.
+    - [ ] Show dead droid (new bitmap)
+    - [ ] Add little game over song
+    - [ ] Show score
+- [ ] Add score to the game
+    - [ ] Decide how to get points
+        - [ ] Next level
+        - [ ] Find key
+        - [ ] Use key
+    - [ ] Maybe a time element?
+- [ ] Option for changing the d-pad
+    - [ ] Add an option to the config menu
+    - [x] Use definers in the code
+    - [ ] Make the menu switch the layout type of the buttons
+- [ ] change the menu
+    - [ ] remove the current menu
+    - [ ] add new menu 
+        - [ ] PLAY
+        - [ ] INFO
+        - [ ] CONF
+            - [ ] BUTTONS SCHEMA A
+            - [ ] BUTTONS SCHEMA B
+        - [ ] SDFX
+            - [ ] SOUND ON
+            - [ ] SOUND OFF

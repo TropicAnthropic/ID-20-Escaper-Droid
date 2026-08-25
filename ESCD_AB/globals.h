@@ -47,7 +47,8 @@
 #define LEVEL_TO_START_WITH          1
 #define TILE_GAME_STARTS_ON          12
 
-
+#define FALSE                        0
+#define TRUE                         1
 
 // globals ///////////////////////////////////////////////////////////////////
 
