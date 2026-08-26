@@ -1,7 +1,7 @@
 #ifndef LEVELS_H
 #define LEVELS_H
 
-#define MAX_AMOUNT_OF_ROOMS                       32
+#define MAX_AMOUNT_OF_ROOMS                       64
 #define MAX_AMOUNT_OF_INFLUENCING_OBJECTS         16
 #define MAX_AMOUNT_OF_TRANSPORTERS                16
 #define AMOUNT_OF_ROOMS_AT_BYTE                   0
@@ -120,8 +120,18 @@
 //  ||└------>  /
 //  |└-------> RESERVED FOR SWITCH (0 = OFF / 1 = ON)
 //  └--------> NOT USED
-
-
+//
+//
+// NEXT LEVEL DOOR
+//0b00000001,
+//  |||||||└->  \  these 2 bits are used to determine what door is the next level door, make sure it exists
+//  ||||||└-->  /. NORTH = 0B00000000; EAST = 0B00000001; SOUTH = 0B00000010; WEST : 0B00000011
+//  |||||└--->  \ 
+//  ||||└---->   |
+//  |||└----->   | these 6 bits are used to set in which room the next level door is
+//  ||└------>   |
+//  |└------->   |
+//  └-------->  / 
 
 const unsigned char PROGMEM level01[] =
 {
@@ -160,6 +170,8 @@ const unsigned char PROGMEM level01[] =
   0b00000011,  0b00000011,
   0b00000100,  0b00011111,
 
+  // data about the door and room that gets you to the next level
+  0b00000000
 };
 
 const unsigned char PROGMEM level02[] =
