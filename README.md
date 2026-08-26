@@ -21,8 +21,9 @@ Code for the game Escaper Droid for Arduboy
     - [ ] Maybe show a map 
 - [ ] Change intro logo
     - [x] Remove Team arg bitmap
-    - [ ] Add new bitmap
-    - [ ] Add small sound
+    - [x] Add new bitmap
+    - [x] Add small sound
+    - [x] replace the placeholder sound with something cool
 - [x] Change in code intro comments
 - [ ] Change Droid in transport modus
     - [x] Make the droid turn around
@@ -33,7 +34,7 @@ Code for the game Escaper Droid for Arduboy
     - [ ] Shooting
     - [ ] Transporting
 - [ ] Change GAME OVER screen
-    - [ ] Remove game over bitmap.
+    - [x] Remove game over bitmap.
     - [ ] Show the droid dying, turning around.
     - [ ] Show dead droid (new bitmap)
     - [ ] Add little game over song
@@ -45,17 +46,17 @@ Code for the game Escaper Droid for Arduboy
         - [ ] Use key
     - [ ] Maybe a time element?
 - [ ] Option for changing the d-pad
-    - [ ] Add an option to the config menu
+    - [x] Add an option to the config menu
     - [x] Use definers in the code
-    - [ ] Make the menu switch the layout type of the buttons
+    - [x] Make the menu switch the layout type of the buttons
 - [ ] change the menu
-    - [ ] remove the current menu
-    - [ ] add new menu 
-        - [ ] PLAY
-        - [ ] INFO
-        - [ ] CONF
-            - [ ] BUTTONS SCHEMA A
-            - [ ] BUTTONS SCHEMA B
-        - [ ] SDFX
-            - [ ] SOUND ON
-            - [ ] SOUND OFF
+    - [x] remove the current menu
+    - [x] add new menu 
+        - [x] INFO
+        - [x] PLAY
+        - [x] CONF
+            - [x] BUTTONS SCHEMA A
+            - [x] BUTTONS SCHEMA B
+        - [x] SDFX
+            - [x] SOUND ON
+            - [x] SOUND OFF

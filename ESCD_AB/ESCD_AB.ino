@@ -1,6 +1,6 @@
 /*
   Escaper Droid
-  Arduboy version 0.6.2
+  Arduboy version 0.6.3
   
   STARTED by TEAM a.r.g.
   2016 - JO3RI - STG
@@ -28,12 +28,12 @@
 typedef void (*FunctionPointer) ();
 const FunctionPointer PROGMEM  mainGameLoop[] =
 {
-  stateMenuIntro,
   stateMenuMain,
-  stateMenuHelp,
-  stateMenuPlay,
+  stateMenuConf,
+  stateMenuSdfx,
   stateMenuInfo,
-  stateMenuSoundfx,
+  stateMenuPlay,
+  stateMenuIntro,
   stateGamePlaying,
   stateGameNextRoom,
   stateGameNextLevel,
@@ -49,6 +49,7 @@ void setup()
   arduboy.audio.begin();
   arduboy.setFrameRate(60);
   //Serial.begin(9600);
+  ATM.play(introMusic);
 }
 
 void loop() {

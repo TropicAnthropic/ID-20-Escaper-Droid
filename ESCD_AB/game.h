@@ -6,6 +6,7 @@
 
 void stateMenuPlay()
 {
+  ATM.stop();
   scorePlayer = 0;
   player.set();
   globalCounter = 0;
@@ -95,7 +96,7 @@ void stateGamePause()
 
 void stateGameOver()
 {
-  sprites.drawSelfMasked(0, 0, gameOverScreen, 0);
+
   drawNumbers(43, 54, scorePlayer, BIG_FONT);
   if (arduboy.justPressed(A_BUTTON | B_BUTTON)) gameState = STATE_MENU_MAIN;
 }

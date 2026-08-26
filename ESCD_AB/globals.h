@@ -4,18 +4,26 @@
 #include <Arduino.h>
 #include <Arduboy2.h>
 #include <Sprites.h>
+#include <ATMlib.h>
 #include "bitmaps.h"
 #include "sfx.h"
+#include "song.h"
 
 // constants /////////////////////////////////////////////////////////////////
 
 //define menu states (on main menu)
-#define STATE_MENU_INTRO             0
-#define STATE_MENU_MAIN              1
-#define STATE_MENU_HELP              2
-#define STATE_MENU_PLAY              3
-#define STATE_MENU_INFO              4
-#define STATE_MENU_SOUNDFX           5
+#define STATE_MENU_INTRO             5
+#define STATE_MENU_MAIN              0
+#define STATE_MENU_PLAY              4
+#define STATE_MENU_INFO              3
+#define STATE_MENU_CONF              1
+#define STATE_MENU_SDFX              2
+
+//define menuSelection states
+#define STATE_MENU_SELECT_CONF       0
+#define STATE_MENU_SELECT_SDFX       1
+#define STATE_MENU_SELECT_INFO       2
+#define STATE_MENU_SELECT_PLAY       3
 
 //define game states (on main menu)
 #define STATE_GAME_PLAYING           6
@@ -54,9 +62,10 @@
 
 Arduboy2Base arduboy;
 Sprites sprites;
+ATMsynth ATM;
 
 byte gameState = STATE_MENU_INTRO;   // start the game with the intro logo
-byte menuSelection = STATE_MENU_PLAY; // PLAY menu item is pre-selected
+byte menuSelection = STATE_MENU_SELECT_PLAY; // PLAY menu item is pre-selected
 byte globalCounter = 0;
 byte level;
 unsigned long scorePlayer;
@@ -66,9 +75,11 @@ byte currentRoom;
 byte currentlyOnTestingTile;
 byte testingTile;
 int currentRoomY;
-byte selectorX = 17;
-byte selectorX2 = 35;
+byte selectorX = 0;
+byte selectorX2 = 0;
 
 byte amountOfTransporters;
+
+bool buttonSchemeOffset;
 
 #endif
