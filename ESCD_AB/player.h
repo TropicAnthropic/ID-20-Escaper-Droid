@@ -132,21 +132,27 @@ void playerTransporting()
   if (player.transportTimer > PLAYER_TRANSPORTING_TIME)
   {
     bitSet(player.characteristics,2);
+    bitClear(player.characteristics,7);
     player.transportTimer = 0;
     gameState = STATE_GAME_PLAYING;
+
   }
 }
 
 
 void drawPlayer()
 {
-  if (bitRead(player.characteristics, 2))
+  byte counter = player.characteristics & 0b00000011;
+  byte counterTwice = 2*counter;
+  if (bitRead(player.characteristics, 7))
   {
-    sprites.drawPlusMask(player.x, player.y, droid_plus_mask, player.characteristics & 0b00000011);
-    //if (player.transportTimer > 0)
-    //{
-    //sprites.drawPlusMask(player.x, player.y, transportBeams_plus_mask, player.characteristics & 0b00000011);
-    //}
+    for (byte i = 0; i<17;i=i+8) sprites.drawPlusMask(player.x-4, player.y-6 + i - counterTwice, transportBeams_plus_mask,0);
+  }
+  if (bitRead(player.characteristics, 4)) sprites.drawPlusMask(player.x, player.y, droid_plus_mask, 4);
+  else if (bitRead(player.characteristics, 2)) sprites.drawPlusMask(player.x, player.y, droid_plus_mask, counter);
+  if (bitRead(player.characteristics, 7))
+  {
+    for (byte i = 0; i<17;i=i+8)sprites.drawPlusMask(player.x-4, player.y+2 + i - counterTwice, transportBeams_plus_mask,1);
   }
 }
 
