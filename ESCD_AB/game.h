@@ -9,7 +9,6 @@ void stateMenuPlay()
   ATM.stop();
   scorePlayer = 0;
   player.set();
-  globalCounter = 0;
   level = LEVEL_TO_START_WITH - 1;
   gameState = STATE_GAME_NEXT_LEVEL;
 }
@@ -96,9 +95,17 @@ void stateGamePause()
 
 void stateGameOver()
 {
-
+  playerDies();
+  drawWalls();
+  drawFloor();
+  drawHUD();
+  drawPlayer();
   drawNumbers(43, 54, scorePlayer, BIG_FONT);
-  if (arduboy.justPressed(A_BUTTON | B_BUTTON)) gameState = STATE_MENU_MAIN;
+  if (arduboy.justPressed(A_BUTTON | B_BUTTON)) 
+  {
+    gameState = STATE_MENU_MAIN;
+    ATM.play(menuSong);
+  }
 }
 
 void stateGameTransporting()
@@ -108,7 +115,7 @@ void stateGameTransporting()
   drawFloor();
   drawHUD();
   drawPlayer();
-  if (globalCounter == 0)
+  if (arduboy.everyXFrames(90))
   {
     currentRoom = transportToRoom(currentRoom);
     player.x = translateTileToX (player.isOnTile) ;
@@ -116,7 +123,6 @@ void stateGameTransporting()
     player.steps = 0;
     enterRoom(currentRoom, level);
   }
-  //checkOrderOfObjects(currentRoom, level);
 }
 
 #endif

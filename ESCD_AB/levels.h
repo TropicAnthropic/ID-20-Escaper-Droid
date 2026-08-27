@@ -1,7 +1,7 @@
 #ifndef LEVELS_H
 #define LEVELS_H
 
-#define MAX_AMOUNT_OF_ROOMS                       64
+#define MAX_AMOUNT_OF_ROOMS                       32
 #define MAX_AMOUNT_OF_INFLUENCING_OBJECTS         16
 #define MAX_AMOUNT_OF_TRANSPORTERS                16
 #define AMOUNT_OF_ROOMS_AT_BYTE                   0
@@ -55,8 +55,8 @@
 // DOORS         NORTH        EAST       SOUTH        WEST       ENEMY1      ENEMY2     OBJECT3     FLOOR1      FLOOR2      FLOOR3      FLOOR4      FLOOR5
 //0b11001110, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
 //  ||||||||    ||||||||                                        ||||||||
-//  ||||||||    ||||||||                                        |||||||└->  \
-//  ||||||||    ||||||||                                        ||||||└-->   |  these 3 bits are used to determine kind of sprite used for the object
+//  ||||||||    ||||||||                                        |||||||└->  \   these 3 bits are used to determine kind of sprite used for the object
+//  ||||||||    ||||||||                                        ||||||└-->   |  0 = black card; 1 = white card; 2 = battery; 3 = chip;
 //  ||||||||    ||||||||                                        |||||└--->  /
 //  ||||||||    ||||||||                                        ||||└---->  \
 //  ||||||||    ||||||||                                        |||└----->   |
@@ -141,7 +141,7 @@ const unsigned char PROGMEM level01[] =
   // DOORS         NORTH       EAST       SOUTH       WEST         ENEMY1      ENEMY2        OBJECT3       FLOOR1      FLOOR2      FLOOR3      FLOOR4      FLOOR5
   0b01000000,   0b00000000, 0b00000111, 0b00000000, 0b00000000,   0b00000000, 0b00000000,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room00
   0b10110000,   0b00001010, 0b00000000, 0b00001100, 0b00000001,   0b00100000, 0b00000000,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room01
-  0b00100000,   0b00000000, 0b00000000, 0b00000100, 0b00000000,   0b00000000, 0b00000000,   0b10100001,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room02
+  0b00100000,   0b00000000, 0b00000000, 0b00000100, 0b00000000,   0b00000000, 0b00000000,   0b10100000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room02
   0b11000000,   0b00000110, 0b00010011, 0b00000000, 0b00000000,   0b00000000, 0b00000000,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room03
 
   0b00110000,   0b00000000, 0b00000000, 0b00010100, 0b00001101,   0b00000000, 0b11000001,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room04

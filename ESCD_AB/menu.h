@@ -28,6 +28,7 @@ void stateMenuIntro()
   { 
     ATM.stop();
     ATM.play(menuSong);
+    buttonSchemeOffset = FALSE;
     gameState = STATE_MENU_MAIN;
   }
   sprites.drawSelfMasked(49, 20, T_arg, 0);
@@ -48,25 +49,14 @@ void stateMenuMain()
 
 void stateMenuConf()
 {
-  byte offSet = 65 + (12 * (((player.assets & 0B10000000) == 0) ? FALSE : TRUE));
+  byte offSet = 65 + (12 * buttonSchemeOffset);
   drawTitleScreen();
   moveSelectors();
   sprites.drawPlusMask(selectorX + offSet, 56, selector_plus_mask, 0);
   sprites.drawPlusMask(selectorX2 + offSet, 56, selector_plus_mask, 0);
-  if (arduboy.justPressed(RIGHT_BUTTON)) 
-  {
-    bitSet(player.assets,7);
-    //Serial.println((bitRead(player.assets,7)));
-  }
-  if (arduboy.justPressed(LEFT_BUTTON)) 
-  {
-    bitClear(player.assets,7);
-    //Serial.println((bitRead(player.assets,7)));
-  }
-  if (arduboy.justPressed(A_BUTTON | B_BUTTON))
-  {
-    gameState = STATE_MENU_MAIN;
-  }
+  if (arduboy.justPressed(RIGHT_BUTTON)) buttonSchemeOffset = 4;
+  if (arduboy.justPressed(LEFT_BUTTON)) buttonSchemeOffset = 0;
+  if (arduboy.justPressed(A_BUTTON | B_BUTTON))gameState = STATE_MENU_MAIN;
 }
 
 void stateMenuInfo()

@@ -644,12 +644,14 @@ void drawHUD()
   sprites.drawSelfMasked(121, 44, hudWhiteCard, 0);
 
   //draw amount of black cards
-  drawNumbers(123, 53, (player.assets & 0b01100000) >> 5, SMALL_FONT);
+  //drawNumbers(123, 53, (player.assets & 0b00100000) >> 5, SMALL_FONT);
+  drawNumbers(123, 53,((bitRead(player.assets,5)) == 0) ? 0 : 1, SMALL_FONT);
   sprites.drawSelfMasked(121, 59, hudBlackCard, 0);
 
   //draw life
-  if (arduboy.everyXFrames(20) && (player.life < 2)) player.characteristics ^= 0b10000000;
-  if (bitRead(player.characteristics, 7)) sprites.drawSelfMasked(122, 11, hudLife, player.life);
+  if bitRead(player.characteristics,4) bitSet(player.assets,6);
+  else if (arduboy.everyXFrames(20) && (player.life < 2)) bitToggle(player.assets,6);
+  if (bitRead(player.assets, 6)) sprites.drawSelfMasked(122, 11, hudLife, player.life);
 }
 
 

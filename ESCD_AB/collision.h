@@ -151,39 +151,39 @@ void checkObjectTypeAndAct()
   switch ((elements[2].characteristics & 0b00000111))
   {
     case PICKUP_BLACK_CARD: // opens level door
-      if ((player.assets & 0b01100000) < 0b01100000)
+      if (bitRead(player.assets,5) == 0) //check if droid has a black card
       {
-        clearElement();
-        player.assets += 0b00100000;
+        bitSet(player.assets,5);         //add the card to the droid
+        clearElement();                  //remove the black card from the room
         scorePlayer += SCORE_BLACK_CARD;
       }
       break;
     case PICKUP_WHITE_CARD: // opens normal door
-      if ((player.assets & 0b00011000) < 0b00011000)
+      if ((player.assets & 0b00011000) < 0b00011000) //check if droid has not more than 3 white cards
       {
-        clearElement();
-        player.assets += 0b00001000;
+        player.assets += 0b00001000;                 //add 1 white card to the droid
+        clearElement();                              //remove the white card from the room 
         scorePlayer += SCORE_WHITE_CARD;
       }
       break;
     case PICKUP_BATTERY:    // 1 extra life
-      if (player.life < 3)
+      if (player.life < 3)                            //check if the player has less than 3 lifes
       {
-        player.life++;
+        player.life++;                                //add 1 life
+        clearElement();                               //remove the life from the room
+        scorePlayer += SCORE_LIFE;
       }
-      clearElement();
-      scorePlayer += SCORE_LIFE;
       break;
     case PICKUP_BULLET:     // 1 shot
-      if ((player.assets & 0b00000111) < 0b00000111)
+      if ((player.assets & 0b00000111) < 0b00000111) //check if the player has less than 7 bullets
       {
-        player.assets++;
-        clearElement();
+        player.assets++;                             //add 1 bullet
+        clearElement();                              //remove 1 bullet from the room
         scorePlayer += SCORE_BULLET;
       }
       break;
     case PICKUP_CHIP:       // extra points
-      clearElement();
+      clearElement();                                //remove the chip from the room
       scorePlayer += SCORE_CHIP;
       break;
     case TELEPORT:          // TELEPORT

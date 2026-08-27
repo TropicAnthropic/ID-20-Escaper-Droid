@@ -3,52 +3,54 @@
 
 #include "globals.h"
 
-#define PLAYER_DROID            9
-#define PLAYER_BULLET           10
-#define PLAYER_IMUNE_TIME       30
-#define PLAYER_TRANSPORT_TIMER  0
+#define PLAYER_DROID              9
+#define PLAYER_BULLET             10
+#define PLAYER_IMMUNE_TIME        240
+#define PLAYER_TRANSPORTING_TIME  90
 
-#define PLAYER                  1
+#define PLAYER                    1
+
+
 
 struct EscaperDroid
 {
   public:
     int x, y;
-    int life;
+    byte life;
     byte characteristics;
-    byte imuneTimer;
-    byte steps;
     byte assets;
     byte isOnTile;
+    byte steps;
+    byte immuneTimer;
     byte transportTimer;
 
     void set()
     {
-      characteristics = 0b10000110;   //this byte holds all the Escaperdroids characteristics
+      characteristics = 0b00000110;   //this byte holds all the Escaperdroids characteristics
       //                  ||||||||
       //                  |||||||└->  0  | this 2 bits are used for direction
       //                  ||||||└-->  1  | 00 = NORTH / 01 = EAST / 10 = SOUTH / 11 = WEST
       //                  |||||└--->  2  The droid is visible                   (0 = false / 1 = true)
-      //                  ||||└---->  3  The droid is imune                     (0 = false / 1 = true)
+      //                  ||||└---->  3  The droid is immune                    (0 = false / 1 = true)
       //                  |||└----->  4  The droid is dying                     (0 = false / 1 = true)
       //                  ||└------>  5  The droid is going through a door      (0 = false / 1 = true)
       //                  |└------->  6  The droid is coming out a door         (0 = false / 1 = true)
-      //                  └-------->  7  the droid's battery meter is visible   (0 = false / 1 = true)
-      imuneTimer = PLAYER_IMUNE_TIME;
-      steps = 0;
-      life = 2;
-      assets = 0b00000000;
+      //                  └-------->  7  the droid is transporting              (0 = false / 1 = true)
+      assets = 0b01000000;
       //         ||||||||
       //         |||||||└->  0  \ 
-      //         ||||||└-->  1   | this 3 bits are used for amount of shots
+      //         ||||||└-->  1   | this 3 bits are used for amount of shots (0 - 7)
       //         |||||└--->  2  /
       //         ||||└---->  3  \
-      //         |||└----->  4   | this 2 bits are used for amount of white cards
-      //         ||└------>  5  \
-      //         |└------->  6   | this 2 bits are used for the amount of black cards
+      //         |||└----->  4   | this 2 bits are used for amount of white cards (0 - 3)
+      //         ||└------>  5  -- the droid has a black card                   (0 = false / 1 = true)
+      //         |└------->  6  -- the droid's battery meter is visible         (0 = false / 1 = true)
       //         └-------->  7  -- RESERVED
       isOnTile = TILE_GAME_STARTS_ON;
-      transportTimer = PLAYER_TRANSPORT_TIMER;
+      steps = 0;
+      life = 3;
+      immuneTimer = 0;
+      transportTimer = 0;
     }
 };
 
@@ -86,54 +88,50 @@ void playerLosesLife()
 {
   if (!bitRead(player.characteristics, 3))
   {
-    player.life -= 1;
+    player.life--;
     bitSet(player.characteristics, 3);
-    if (player.life < 1) bitSet(player.characteristics, 4);
+    if (player.life < 1)
+    {
+      bitSet(player.characteristics, 4);                              // set droid is dying
+      bitClear(player.characteristics, 3);                            // set droid not immune
+    }
   }
 }
 
 void updatePlayer()
 {
+  //Serial.println(player.immuneTimer);
   if (bitRead(player.characteristics, 3))
   {
-    if (arduboy.everyXFrames(4))
+    player.immuneTimer++;
+    if (arduboy.everyXFrames(4)) bitToggle(player.characteristics,2);
+    bitToggle(player.characteristics,2);
+    if (player.immuneTimer > PLAYER_IMMUNE_TIME)
     {
-      player.imuneTimer--;
-      player.characteristics ^= 0b00000100;
-    }
-    if (player.imuneTimer < 1)
-    {
-      player.imuneTimer = PLAYER_IMUNE_TIME;
       bitClear(player.characteristics, 3);
+      bitSet(player.characteristics, 2);
+      player.immuneTimer = 0;
     }
   }
-  else if (player.life < 1)
-  {
-    gameState = STATE_GAME_OVER;
-  }
+  else if (bitRead(player.characteristics, 4)) gameState = STATE_GAME_OVER;
+}
+
+void playerDies()
+{
+
 }
 
 void playerTransporting()
 {
-  globalCounter++;
   player.transportTimer++;
-  if (player.transportTimer > 4)
+  if (arduboy.everyXFrames(4))
   {
-    if ((player.characteristics & 0b00000011) > 2)
-    {
-      player.characteristics = player.characteristics & 0b11111100;
-    }
-    else if ((player.characteristics & 0b00000011) < 3)
-    {
-      player.characteristics++;
-    }
-    player.transportTimer = 0;
+    if ((player.characteristics & 0b00000011) > 2) player.characteristics = player.characteristics & 0b11111100;
+    else if ((player.characteristics & 0b00000011) < 3) player.characteristics++;
   }
-
-  if (globalCounter > 90)
+  if (player.transportTimer > PLAYER_TRANSPORTING_TIME)
   {
-    player.characteristics  |= 0b00000100;
-    globalCounter = 0;
+    bitSet(player.characteristics,2);
     player.transportTimer = 0;
     gameState = STATE_GAME_PLAYING;
   }
@@ -145,10 +143,10 @@ void drawPlayer()
   if (bitRead(player.characteristics, 2))
   {
     sprites.drawPlusMask(player.x, player.y, droid_plus_mask, player.characteristics & 0b00000011);
-    if (player.transportTimer > 0)
-    {
-      sprites.drawPlusMask(player.x, player.y, transportBeams_plus_mask, player.characteristics & 0b00000011);
-    }
+    //if (player.transportTimer > 0)
+    //{
+    //sprites.drawPlusMask(player.x, player.y, transportBeams_plus_mask, player.characteristics & 0b00000011);
+    //}
   }
 }
 

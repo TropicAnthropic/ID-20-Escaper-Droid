@@ -66,7 +66,6 @@ ATMsynth ATM;
 
 byte gameState = STATE_MENU_INTRO;   // start the game with the intro logo
 byte menuSelection = STATE_MENU_SELECT_PLAY; // PLAY menu item is pre-selected
-byte globalCounter = 0;
 byte level;
 unsigned long scorePlayer;
 
@@ -80,6 +79,6 @@ byte selectorX2 = 0;
 
 byte amountOfTransporters;
 
-bool buttonSchemeOffset;
+byte buttonSchemeOffset;
 
 #endif

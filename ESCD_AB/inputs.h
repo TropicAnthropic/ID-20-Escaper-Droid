@@ -22,9 +22,7 @@ void checkInputs()
     byte testingTile = tileFromXY(player.x, player.y - currentRoomY);
     if (testingTile < 25) player.isOnTile = tileFromXY(player.x, player.y - currentRoomY);
     //Serial.println(player.isOnTile);
-    //byte whichScheme = 4 * bitRead(player.assets,7);
-    byte whichScheme = ((player.assets & 0B10000000) == 0) ? BUTTON_SCHEME_A : BUTTON_SCHEME_B;
-    if (arduboy.pressed(pgm_read_byte(&buttonScheme[NORTH + whichScheme])))
+    if (arduboy.pressed(pgm_read_byte(&buttonScheme[NORTH + buttonSchemeOffset])))
     {
       bitClear(player.characteristics, 0);
       bitClear(player.characteristics, 1);
@@ -39,7 +37,7 @@ void checkInputs()
     }
 
 
-    else if (arduboy.pressed(pgm_read_byte(&buttonScheme[EAST + whichScheme])))
+    else if (arduboy.pressed(pgm_read_byte(&buttonScheme[EAST + buttonSchemeOffset])))
     {
       bitSet(player.characteristics, 0);
       bitClear(player.characteristics, 1);
@@ -53,7 +51,7 @@ void checkInputs()
       }
     }
 
-    else if (arduboy.pressed(pgm_read_byte(&buttonScheme[SOUTH + whichScheme])))
+    else if (arduboy.pressed(pgm_read_byte(&buttonScheme[SOUTH + buttonSchemeOffset])))
     {
       bitClear(player.characteristics, 0);
       bitSet(player.characteristics, 1);
@@ -67,7 +65,7 @@ void checkInputs()
       }
     }
 
-    else if (arduboy.pressed(pgm_read_byte(&buttonScheme[WEST + whichScheme])))
+    else if (arduboy.pressed(pgm_read_byte(&buttonScheme[WEST + buttonSchemeOffset])))
     {
       bitSet(player.characteristics, 0);
       bitSet(player.characteristics, 1);
