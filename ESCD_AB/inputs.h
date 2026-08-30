@@ -87,7 +87,7 @@ void checkInputs()
     {
       case NORTH:
         // OPEN A DOOR IF DROID HAS A WHITE CARD OR A BLACK CARD
-        if (player.isOnTile == 2)
+        if (player.isOnTile == 2);
         {
           playerChecksAndOpensDoor(NORTH);             // OPEN A DOOR IF DROID HAS A WHITE CARD WHITE CARD
           playerChecksAndOpensLevelDoor(NORTH);        // OPEN THE LEVEL DOOR IF DROID HAS A BLACK CARD

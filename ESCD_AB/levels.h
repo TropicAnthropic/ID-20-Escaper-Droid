@@ -143,7 +143,7 @@ const unsigned char PROGMEM level01[] =
   5,          // amount of rooms
   2,          // amount of transporters
   3,          // amount of influencing objects 
-  0b00000000, // data about the door and room that gets you to the next level
+  0b0000000, // data about the door and room that gets you to the next level
 
   // DOORS         NORTH       EAST       SOUTH       WEST         ENEMY1      ENEMY2        OBJECT3       FLOOR1      FLOOR2      FLOOR3      FLOOR4      FLOOR5
   0b11111001,   0b00000110, 0b00001011, 0b00001100, 0b00010001,   0b00000000, 0b00000000,   0b11000011,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room0

@@ -28,7 +28,7 @@ boolean hitBorders(int objectX, int objectY, int directionFacing, bool playerOrE
 
 void playerChecksAndOpensDoor(byte direction)
 {
-  if (player.assets & 0b00011000)
+  if ((player.assets & 0b00011000) && (checkIfLevelDoor() != direction))
   {
     player.assets -= 0b00001000;
     scorePlayer += SCORE_OPEN_DOOR;
@@ -38,7 +38,7 @@ void playerChecksAndOpensDoor(byte direction)
 
 void playerChecksAndOpensLevelDoor(byte direction)
 {
-  if (player.assets & 0B00100000) // also still need to check if it is a level door
+  if ((player.assets & 0B00100000) && (checkIfLevelDoor() == direction)) // also still need to check if it is a level door
   {
     player.assets -= 0b00100000;
     scorePlayer += SCORE_LEVEL_DOOR;

@@ -7,6 +7,7 @@
 #include "elements.h"
 
 #define UPPERBIT_OFFSET               4
+#define LEVEL_OFFSET                  1
 
 #define TILE_INFRONT_DOOR_NORTH       2
 #define TILE_INFRONT_DOOR_EAST        10
@@ -119,33 +120,33 @@ Room stageRoom[MAX_AMOUNT_OF_ROOMS];
 void buildRooms(byte currentLevel)
 {
   byte transporterCounter = 0;
-  for (byte roomNumber = 0; roomNumber < pgm_read_byte(&levels[currentLevel - 1][AMOUNT_OF_ROOMS_AT_BYTE]); roomNumber++)
+  for (byte roomNumber = 0; roomNumber < pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][AMOUNT_OF_ROOMS_AT_BYTE]); roomNumber++)
   {
     // clear all info
     stageRoom[roomNumber].set();
 
     // now lets set all the data for each room in the current level from the datasheet
     // first set all the doors and if those are closed or open
-    stageRoom[roomNumber].doorsClosedActive = pgm_read_byte(&levels[currentLevel - 1][ROOMS_DATA_START_AT_BYTE + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]);
+    stageRoom[roomNumber].doorsClosedActive = pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ROOMS_DATA_START_AT_BYTE + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]);
 
     // Second thing to do is to set the 8 elements active or inactive in each room (2 enemies, an object and 5 special floor tiles)
     for (byte i = 0; i < 8; i++)
     {
-      if (pgm_read_byte(&levels[currentLevel - 1][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]))
+      if (pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]))
       { //0b76543210
         bitSet (stageRoom[roomNumber].elementsActive, 7 - i);    //0b12345678
       }
-      //Serial.print(pgm_read_byte(&levels[currentLevel - 1][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]), BIN);
+      //Serial.print(pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]), BIN);
       //Serial.print(" : ");
     }
     //Serial.println();
     //Serial.println(stageRoom[roomNumber].elementsActive, BIN);
 
     // Third thing to do is to set the transporter data in the correct room
-    if ((pgm_read_byte(&levels[currentLevel - 1][ELEMENTS_DATA_START_AT_BYTE + OBJECT_THREE + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]) & 0b00000111) == TELEPORT)
+    if ((pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + OBJECT_THREE + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]) & 0b00000111) == TELEPORT)
     {
-      byte transportDataAtByte = ROOMS_DATA_START_AT_BYTE + (BYTES_USED_FOR_EVERY_ROOM * pgm_read_byte(&levels[currentLevel - 1][AMOUNT_OF_ROOMS_AT_BYTE]));
-      stageRoom[roomNumber].roomToTransportTo = pgm_read_byte(&levels[currentLevel - 1][transportDataAtByte + transporterCounter]);
+      byte transportDataAtByte = ROOMS_DATA_START_AT_BYTE + (BYTES_USED_FOR_EVERY_ROOM * pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][AMOUNT_OF_ROOMS_AT_BYTE]));
+      stageRoom[roomNumber].roomToTransportTo = pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][transportDataAtByte + transporterCounter]);
       transporterCounter++;
       //Serial.print(transportDataAtByte);
       //Serial.print(" : ");
@@ -157,7 +158,7 @@ void buildRooms(byte currentLevel)
   }
 
 
-  //stageRoom[roomNumber].roomNumberInfluencing = pgm_read_byte(&levels[currentLevel - 1][ROOMS_DATA_START_AT_BYTE + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]);
+  //stageRoom[roomNumber].roomNumberInfluencing = pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ROOMS_DATA_START_AT_BYTE + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]);
 
   // And finally lets set what elements will be influenced in the room that has been set above
   //Serial.println();
@@ -166,7 +167,8 @@ void buildRooms(byte currentLevel)
 
 byte checkIfLevelDoor()
 {
-  return (pgm_read_byte(&levels[level][0]));
+  byte test = pgm_read_byte(&levels[level-LEVEL_OFFSET][LEVEL_DOOR_DATA_START_AT_BYTE]);
+  if (currentRoom == ((test & 0b1111100)>>2)) return (test & 0b00000011);
 }
 
 byte tileFromXY(byte x, byte y)
@@ -226,13 +228,13 @@ void enterRoom(byte roomNumber, byte currentLevel)
     {
       // set all enemies at there position
       // set elements on correct place 0 => 24)
-      byte currentTile = (pgm_read_byte(&levels[currentLevel - 1][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)])) >> 3;
-      //Serial.println((pgm_read_byte(&levels[currentLevel - 1][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)])) >> 3);
+      byte currentTile = (pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)])) >> 3;
+      //Serial.println((pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)])) >> 3);
       elements[i].x = translateTileToX(currentTile);
       elements[i].y = translateTileToY(currentTile);
 
       // get kind of sprite (stored in level data) and put it into the 3 most left bits
-      elements[i].characteristics = ((pgm_read_byte(&levels[currentLevel - 1][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)])) & 0b00000111);
+      elements[i].characteristics = ((pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)])) & 0b00000111);
       //Serial.println(elements[i].characteristics, BIN);
 
       // we will always set the current direction to EAST (0b00001000)
@@ -255,7 +257,7 @@ byte goToRoom(byte roomNumber, byte currentLevel)
 {
   // we now which door the player goes through by the direction the droid is facing
   byte door = player.characteristics & 0b00000011;
-  return (pgm_read_byte(&levels[currentLevel - 1][DOORS_DATA_START_AT_BYTE + door + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]) >> 2);
+  return (pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][DOORS_DATA_START_AT_BYTE + door + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]) >> 2);
 };
 
 
@@ -263,7 +265,7 @@ byte goToTile(byte roomNumber, byte currentLevel)
 {
   // we know which door the player goes through by the direction the droid is facing
   byte door = player.characteristics & 0b00000011;
-  byte doorGoingTo = pgm_read_byte(&levels[currentLevel - 1][DOORS_DATA_START_AT_BYTE + door + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]) & 0b00000011;
+  byte doorGoingTo = pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][DOORS_DATA_START_AT_BYTE + door + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]) & 0b00000011;
   switch (doorGoingTo)
   {
     case NORTH:
@@ -384,7 +386,9 @@ void drawDoorPostSmallNorth()
 
 void drawDoorClossedNorth()
 {
-  sprites.drawPlusMask(24, currentRoomY + 14, doorClossed_plus_mask, SOUTH);
+  sprites.drawPlusMask(24, currentRoomY + 15, doorClossed_plus_mask, NORTH);
+  if (checkIfLevelDoor() == NORTH) sprites.drawPlusMask(24, currentRoomY + 16, doorClossed_plus_mask, NORTH);  // draw the clossed door 2 times for level door
+
 }
 
 
@@ -408,7 +412,9 @@ void drawDoorPostSmallEast()
 
 void drawDoorClossedEast()
 {
-  sprites.drawPlusMask(85, currentRoomY + 14, doorClossed_plus_mask, WEST);
+  sprites.drawPlusMask(85, currentRoomY + 15, doorClossed_plus_mask, EAST);
+if (checkIfLevelDoor() == EAST) sprites.drawPlusMask(85, currentRoomY + 16, doorClossed_plus_mask, EAST);  // draw the clossed door 2 times for level door
+
 }
 
 
@@ -432,7 +438,8 @@ void drawDoorPostSmallSouth()
 
 void drawDoorClossedSouth()
 {
-  sprites.drawPlusMask(89 , currentRoomY + 47, doorClossed_plus_mask, NORTH);
+  sprites.drawPlusMask(89 , currentRoomY + 48, doorClossed_plus_mask, SOUTH);
+  if (checkIfLevelDoor() == SOUTH) sprites.drawPlusMask(89 , currentRoomY + 49, doorClossed_plus_mask, SOUTH);  // draw the clossed door 2 times for level door
 }
 
 
@@ -456,8 +463,10 @@ void drawDoorPostSmallWest()
 
 void drawDoorClossedWest()
 {
-  sprites.drawPlusMask(19, currentRoomY + 47, doorClossed_plus_mask, EAST);
+  sprites.drawPlusMask(19, currentRoomY + 48, doorClossed_plus_mask, WEST);
+  if (checkIfLevelDoor() == WEST) sprites.drawPlusMask(19, currentRoomY + 49, doorClossed_plus_mask, WEST); // draw the clossed door 2 times for level door
 }
+
 
 
 
