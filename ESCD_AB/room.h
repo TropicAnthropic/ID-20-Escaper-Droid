@@ -384,7 +384,7 @@ void drawDoorPostSmallNorth()
 
 void drawDoorClossedNorth()
 {
-  sprites.drawPlusMask(24, currentRoomY + 14, doorClossed_plus_mask, NORTH);
+  sprites.drawPlusMask(24, currentRoomY + 14, doorClossed_plus_mask, SOUTH);
 }
 
 
@@ -408,7 +408,7 @@ void drawDoorPostSmallEast()
 
 void drawDoorClossedEast()
 {
-  sprites.drawPlusMask(85, currentRoomY + 14, doorClossed_plus_mask, EAST);
+  sprites.drawPlusMask(85, currentRoomY + 14, doorClossed_plus_mask, WEST);
 }
 
 
@@ -432,7 +432,7 @@ void drawDoorPostSmallSouth()
 
 void drawDoorClossedSouth()
 {
-  sprites.drawPlusMask(89 , currentRoomY + 47, doorClossed_plus_mask, SOUTH);
+  sprites.drawPlusMask(89 , currentRoomY + 47, doorClossed_plus_mask, NORTH);
 }
 
 
@@ -456,7 +456,7 @@ void drawDoorPostSmallWest()
 
 void drawDoorClossedWest()
 {
-  sprites.drawPlusMask(19, currentRoomY + 47, doorClossed_plus_mask, WEST);
+  sprites.drawPlusMask(19, currentRoomY + 47, doorClossed_plus_mask, EAST);
 }
 
 

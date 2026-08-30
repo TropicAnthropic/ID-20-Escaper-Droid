@@ -6,7 +6,7 @@
   2016 - JO3RI - STG
 
   CONTINUED by
-  2026 - JO3RI - 
+  2026 - JO3RI - Onebit
 
   Game License: MIT : https://opensource.org/licenses/MIT
 

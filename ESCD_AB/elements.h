@@ -41,6 +41,7 @@
 #define SCORE_BLACK_CARD          100
 #define SCORE_WHITE_CARD          10
 #define SCORE_LIFE                20
+#define SCORE_TO_MUCH_LIFE        50
 #define SCORE_BULLET              30
 #define SCORE_CHIP                200
 #define SCORE_OPEN_DOOR           50

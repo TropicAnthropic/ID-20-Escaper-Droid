@@ -192,6 +192,11 @@ void checkObjectTypeAndAct()
         clearElement();                               //remove the life from the room
         scorePlayer += SCORE_LIFE;
       }
+      else 
+      {
+        clearElement();                               //remove the life from the room
+        scorePlayer += SCORE_TO_MUCH_LIFE;
+      }
       break;
     case PICKUP_BULLET:     // 1 shot
       if ((player.assets & 0b00000111) < 0b00000111) //check if the player has less than 7 bullets
