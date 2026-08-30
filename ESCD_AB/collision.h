@@ -26,51 +26,70 @@ boolean hitBorders(int objectX, int objectY, int directionFacing, bool playerOrE
   return true;
 }
 
-
-void setPlayerWalkingThroughDoor(int objectX, int objectY, byte directionFacing)
+void playerChecksAndOpensDoor(byte direction)
 {
-  switch (directionFacing)
+  if (player.assets & 0b00011000)
+  {
+    player.assets -= 0b00001000;
+    scorePlayer += SCORE_OPEN_DOOR;
+    bitClear(stageRoom[currentRoom].doorsClosedActive, direction);
+  }
+}
+
+void playerChecksAndOpensLevelDoor(byte direction)
+{
+  if (player.assets & 0B00100000) // also still need to check if it is a level door
+  {
+    player.assets -= 0b00100000;
+    scorePlayer += SCORE_LEVEL_DOOR;
+    bitClear(stageRoom[currentRoom].doorsClosedActive, direction);
+  }
+}
+
+void setPlayerWalkingThroughDoor()
+{
+  switch (player.characteristics & 0b00000011)
   {
     case NORTH:
-      if ((tileFromXY(objectX, objectY - currentRoomY) == 2) &&             // droid is on the tile for a door
-          (bitRead(stageRoom[currentRoom].doorsClosedActive, 7)) &&         // the door exists in this room
-          (!bitRead(stageRoom[currentRoom].doorsClosedActive, 3))           // the door is not closed
+      if ((player.isOnTile == TILE_INFRONT_DOOR_NORTH) &&                                                         // droid is on the tile for a door
+          (bitRead(stageRoom[currentRoom].doorsClosedActive, NORTH_DOOR_EXISTS)) &&         // the door exists in this room         
+          (!bitRead(stageRoom[currentRoom].doorsClosedActive, NORTH_DOOR_IS_CLOSSED))       // the door is not closed
          )
       {
-        bitSet (player.characteristics, 5);                                  // if all above, set the droid is walking through the door
+        bitSet (player.characteristics, 5);                                                 // if all above, set the droid is walking through the door
         player.x = translateTileToX(2);
         player.y = translateTileToY(2) + currentRoomY;
       }
       break;
     case EAST:
-      if ((tileFromXY(objectX, objectY - currentRoomY) == 10) &&            // droid is on the tile for a door
-          (bitRead(stageRoom[currentRoom].doorsClosedActive, 6)) &&         // the door exists in this room
-          (!bitRead(stageRoom[currentRoom].doorsClosedActive, 2))           // the door is not closed
+      if ((player.isOnTile == TILE_INFRONT_DOOR_EAST) &&                                                        // droid is on the tile for a door
+          (bitRead(stageRoom[currentRoom].doorsClosedActive, EAST_DOOR_EXISTS)) &&          // the door exists in this room
+          (!bitRead(stageRoom[currentRoom].doorsClosedActive, EAST_DOOR_IS_CLOSSED))        // the door is not closed
          )
       {
-        bitSet (player.characteristics, 5);                                 // if all above, set the droid is walking through the door
+        bitSet (player.characteristics, 5);                                                 // if all above, set the droid is walking through the door
         player.x = translateTileToX(10);
         player.y = translateTileToY(10) + currentRoomY;
       }
       break;
     case SOUTH:
-      if ((tileFromXY(objectX, objectY - currentRoomY) == 22) &&            // droid is on the tile for a door
-          (bitRead(stageRoom[currentRoom].doorsClosedActive, 5)) &&         // the door exists in this room
-          (!bitRead(stageRoom[currentRoom].doorsClosedActive, 1))           // the door is not closed
+      if ((player.isOnTile == TILE_INFRONT_DOOR_SOUTH) &&                                                        // droid is on the tile for a door
+          (bitRead(stageRoom[currentRoom].doorsClosedActive, SOUTH_DOOR_EXISTS)) &&         // the door exists in this room
+          (!bitRead(stageRoom[currentRoom].doorsClosedActive, SOUTH_DOOR_IS_CLOSSED))       // the door is not closed
          )
       {
-        bitSet (player.characteristics, 5);                                 // if all above, set the droid is walking through the door
+        bitSet (player.characteristics, 5);                                                 // if all above, set the droid is walking through the door
         player.x = translateTileToX(22);
         player.y = translateTileToY(22) + currentRoomY;
       }
       break;
     case WEST:
-      if ((tileFromXY(objectX, objectY - currentRoomY) == 14) &&            // droid is on the tile for a door
-          (bitRead(stageRoom[currentRoom].doorsClosedActive, 4)) &&         // the door exists in this room
-          (!bitRead(stageRoom[currentRoom].doorsClosedActive, 0))           // the door is not closed
+      if ((player.isOnTile == TILE_INFRONT_DOOR_WEST) &&                                                        // droid is on the tile for a door
+          (bitRead(stageRoom[currentRoom].doorsClosedActive, WEST_DOOR_EXISTS)) &&          // the door exists in this room
+          (!bitRead(stageRoom[currentRoom].doorsClosedActive, WEST_DOOR_IS_CLOSSED))        // the door is not closed
          )
       {
-        bitSet (player.characteristics, 5);                                 // if all above, set the droid is walking through the door
+        bitSet (player.characteristics, 5);                                                  // if all above, set the droid is walking through the door
         player.x = translateTileToX(14);
         player.y = translateTileToY(14) + currentRoomY;
       }
@@ -82,7 +101,7 @@ void setPlayerWalkingThroughDoor(int objectX, int objectY, byte directionFacing)
 boolean checkborderHit(int objectX, int objectY, byte directionFacing)
 {
   if (!hitBorders(objectX, objectY, directionFacing, PLAYER)) return false;
-  else setPlayerWalkingThroughDoor(objectX, objectY, directionFacing);
+  else setPlayerWalkingThroughDoor();
   return true;
 }
 

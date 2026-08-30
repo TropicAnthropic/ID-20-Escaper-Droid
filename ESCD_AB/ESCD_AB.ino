@@ -1,12 +1,12 @@
 /*
   Escaper Droid
-  Arduboy version 0.6.5
+  Arduboy version 0.7.0
   
   STARTED by TEAM a.r.g.
   2016 - JO3RI - STG
 
   CONTINUED by
-  2026 - JO3RI
+  2026 - JO3RI - 
 
   Game License: MIT : https://opensource.org/licenses/MIT
 

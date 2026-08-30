@@ -6,21 +6,36 @@
 #include "player.h"
 #include "elements.h"
 
+#define UPPERBIT_OFFSET               4
+
+#define TILE_INFRONT_DOOR_NORTH       2
+#define TILE_INFRONT_DOOR_EAST        10
+#define TILE_INFRONT_DOOR_SOUTH       22
+#define TILE_INFRONT_DOOR_WEST        14
+
+#define NORTH_DOOR_EXISTS             NORTH + UPPERBIT_OFFSET
+#define NORTH_DOOR_IS_CLOSSED         NORTH
 #define NORTH_LINTEL                  11
 #define NORTH_BIG_POST                12
 #define NORTH_SMALL_POST              13
 #define NORTH_DOOR_CLOSSED            14
 
+#define EAST_DOOR_EXISTS              EAST + UPPERBIT_OFFSET
+#define EAST_DOOR_IS_CLOSSED          EAST
 #define EAST_LINTEL                   15
 #define EAST_BIG_POST                 16
 #define EAST_SMALL_POST               17
 #define EAST_DOOR_CLOSSED             18
 
+#define SOUTH_DOOR_EXISTS             SOUTH + UPPERBIT_OFFSET
+#define SOUTH_DOOR_IS_CLOSSED         SOUTH
 #define SOUTH_LINTEL                  19
 #define SOUTH_BIG_POST                20
 #define SOUTH_SMALL_POST              21
 #define SOUTH_DOOR_CLOSSED            22
 
+#define WEST_DOOR_EXISTS              WEST + UPPERBIT_OFFSET
+#define WEST_DOOR_IS_CLOSSED          WEST
 #define WEST_LINTEL                   23
 #define WEST_BIG_POST                 24
 #define WEST_SMALL_POST               25
@@ -45,14 +60,14 @@ struct Room {
     {
       doorsClosedActive = 0b00000000;   // this byte holds all the 4 doors characteristics for each room
       //                    ||||||||
-      //                    |||||||└->  0  DOOR WEST  IS CLOSED (0 = false / 1 = true)
-      //                    ||||||└-->  1  DOOR SOUTH IS CLOSED (0 = false / 1 = true)
-      //                    |||||└--->  2  DOOR EAST  IS CLOSED (0 = false / 1 = true)
-      //                    ||||└---->  3  DOOR NORTH IS CLOSED (0 = false / 1 = true)
-      //                    |||└----->  4  DOOR WEST  EXISTS    (0 = false / 1 = true)
-      //                    ||└------>  5  DOOR SOUTH EXISTS    (0 = false / 1 = true)
-      //                    |└------->  6  DOOR EAST  EXISTS    (0 = false / 1 = true)
-      //                    └-------->  7  DOOR NORTH EXISTS    (0 = false / 1 = true)
+      //                    |||||||└->  0  DOOR NORTH  IS CLOSED (0 = false / 1 = true)
+      //                    ||||||└-->  1  DOOR EAST   IS CLOSED (0 = false / 1 = true)
+      //                    |||||└--->  2  DOOR SOUTH  IS CLOSED (0 = false / 1 = true)
+      //                    ||||└---->  3  DOOR WEST   IS CLOSED (0 = false / 1 = true)
+      //                    |||└----->  4  DOOR NORTH  EXISTS    (0 = false / 1 = true)
+      //                    ||└------>  5  DOOR EAST   EXISTS    (0 = false / 1 = true)
+      //                    |└------->  6  DOOR SOUTH  EXISTS    (0 = false / 1 = true)
+      //                    └-------->  7  DOOR WEST   EXISTS    (0 = false / 1 = true)
 
       elementsActive = 0b00000000;
       //                 ||||||||
@@ -148,6 +163,11 @@ void buildRooms(byte currentLevel)
   //Serial.println();
 }
 
+
+byte checkIfLevelDoor()
+{
+  return (pgm_read_byte(&levels[level][0]));
+}
 
 byte tileFromXY(byte x, byte y)
 {
@@ -284,16 +304,16 @@ int offsetXAfterDoor(byte currentTile)
 {
   switch (currentTile)
   {
-    case 2:
+    case TILE_INFRONT_DOOR_NORTH:
       return -10;
       break;
-    case 10:
+    case TILE_INFRONT_DOOR_EAST:
       return 10;
       break;
-    case 22:
+    case TILE_INFRONT_DOOR_SOUTH:
       return 10;
       break;
-    case 14:
+    case TILE_INFRONT_DOOR_WEST:
       return -10;
       break;
   }
@@ -303,16 +323,16 @@ int offsetYAfterDoor(byte currentTile)
 {
   switch (currentTile)
   {
-    case 2:
+    case TILE_INFRONT_DOOR_NORTH:
       return -5;
       break;
-    case 10:
+    case TILE_INFRONT_DOOR_EAST:
       return -5;
       break;
-    case 22:
+    case TILE_INFRONT_DOOR_SOUTH:
       return 5;
       break;
-    case 14:
+    case TILE_INFRONT_DOOR_WEST:
       return 5;
       break;
   }
@@ -501,43 +521,43 @@ void checkOrderOfObjects(byte roomNumber, byte currentLevel)
   memset(itemsOrder, EMPTY_PLACE, SIZE_OF_ITEMSORDER);
 
   //draw door NORTH
-  if (bitRead(stageRoom[currentRoom].doorsClosedActive, 7))
+  if (bitRead(stageRoom[currentRoom].doorsClosedActive, NORTH_DOOR_EXISTS))
   {
     itemsOrder[0] = NORTH_LINTEL;
     itemsOrder[1] = NORTH_BIG_POST;
     itemsOrder[3] = NORTH_SMALL_POST;
   }
-  if (bitRead(stageRoom[currentRoom].doorsClosedActive, 3)) itemsOrder[4] = NORTH_DOOR_CLOSSED;
+  if (bitRead(stageRoom[currentRoom].doorsClosedActive, NORTH_DOOR_IS_CLOSSED)) itemsOrder[4] = NORTH_DOOR_CLOSSED;
 
 
   //draw door EAST
-  if (bitRead(stageRoom[currentRoom].doorsClosedActive, 6))
+  if (bitRead(stageRoom[currentRoom].doorsClosedActive, EAST_DOOR_EXISTS))
   {
     itemsOrder[5] = EAST_LINTEL;
     itemsOrder[6] = EAST_BIG_POST;
     itemsOrder[8] = EAST_SMALL_POST;
   }
-  if (bitRead(stageRoom[currentRoom].doorsClosedActive, 2)) itemsOrder[9] = EAST_DOOR_CLOSSED;
+  if (bitRead(stageRoom[currentRoom].doorsClosedActive, EAST_DOOR_IS_CLOSSED)) itemsOrder[9] = EAST_DOOR_CLOSSED;
 
 
   //draw door SOUTH
-  if (bitRead(stageRoom[currentRoom].doorsClosedActive, 5))
+  if (bitRead(stageRoom[currentRoom].doorsClosedActive, SOUTH_DOOR_EXISTS))
   {
     itemsOrder[35] = SOUTH_LINTEL;
     itemsOrder[36] = SOUTH_BIG_POST;
     itemsOrder[38] = SOUTH_SMALL_POST;
   }
-  if (bitRead(stageRoom[currentRoom].doorsClosedActive, 1)) itemsOrder[39] = SOUTH_DOOR_CLOSSED;
+  if (bitRead(stageRoom[currentRoom].doorsClosedActive, SOUTH_DOOR_IS_CLOSSED)) itemsOrder[39] = SOUTH_DOOR_CLOSSED;
 
 
   //draw door WEST
-  if (bitRead(stageRoom[currentRoom].doorsClosedActive, 4))
+  if (bitRead(stageRoom[currentRoom].doorsClosedActive, WEST_DOOR_EXISTS))
   {
     itemsOrder[40] = WEST_LINTEL;
     itemsOrder[41] = WEST_BIG_POST;
     itemsOrder[43] = WEST_SMALL_POST;
   }
-  if (bitRead(stageRoom[currentRoom].doorsClosedActive, 0)) itemsOrder[44] = WEST_DOOR_CLOSSED;
+  if (bitRead(stageRoom[currentRoom].doorsClosedActive, WEST_DOOR_IS_CLOSSED)) itemsOrder[44] = WEST_DOOR_CLOSSED;
 
 
   //******************************
@@ -576,7 +596,7 @@ void checkOrderOfObjects(byte roomNumber, byte currentLevel)
   // check what tile the 8 elements are on  (so that we can determine what order things need to be displayed)
   for (byte i = 0; i < 8; i++)
   {
-    if (bitRead(stageRoom[currentRoom].elementsActive, 7 - i))itemsOrder[tileFromXY(elements[i].x, elements[i].y) + ITEMS_ORDER_TILES_START] = i;
+   if (bitRead(stageRoom[currentRoom].elementsActive, 7 - i))itemsOrder[tileFromXY(elements[i].x, elements[i].y) + ITEMS_ORDER_TILES_START] = i;
   }
   /*
     for (byte i = 0; i < SIZE_OF_ITEMSORDER; i++)

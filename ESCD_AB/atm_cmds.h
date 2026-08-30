@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #ifndef ATM_CMDS_H
 #define ATM_CMDS_H
 
@@ -128,8 +130,6 @@
 #define ATM_NOTE_C7       		 0x00 + 61
 #define ATM_NOTE_C7_      		 0x00 + 62
 #define ATM_NOTE_D7       		 0x00 + 63
-
-// let's define 
 
 
 #endif

@@ -5,9 +5,12 @@
 #define MAX_AMOUNT_OF_INFLUENCING_OBJECTS         16
 #define MAX_AMOUNT_OF_TRANSPORTERS                16
 #define AMOUNT_OF_ROOMS_AT_BYTE                   0
-#define ROOMS_DATA_START_AT_BYTE                  3
+#define AMOUNT_OF_TRANSPORTERS_AT_BYTE            1
+#define AMOUNT_OF_INFLUENCING_OBJECTS_AT_BYTE     2
+#define LEVEL_DOOR_DATA_START_AT_BYTE             3
+#define ROOMS_DATA_START_AT_BYTE                  4
 #define DOORS_DATA_START_AT_BYTE                  ROOMS_DATA_START_AT_BYTE + 1
-#define ELEMENTS_DATA_START_AT_BYTE               ROOMS_DATA_START_AT_BYTE + 5
+#define ELEMENTS_DATA_START_AT_BYTE               ROOMS_DATA_START_AT_BYTE + 5             
 #define BYTES_USED_FOR_EVERY_ROOM                 13
 
 // ROOM ORDER OF TILES
@@ -52,6 +55,17 @@
 //  {106, 42}, {94, 48}, {82, 56}, {70, 60}, {58, 66}, // Tile 20 21 22 23 24
 //};
 
+// NEXT LEVEL DOOR
+//0b00000001,
+//  |||||||└->  \  these 2 bits are used to determine what door is the next level door, make sure it exists
+//  ||||||└-->  /. NORTH = 0B00000000; EAST = 0B00000001; SOUTH = 0B00000010; WEST : 0B00000011
+//  |||||└--->  \ 
+//  ||||└---->   |
+//  |||└----->   | these 6 bits are used to set in which room the next level door is
+//  ||└------>   |
+//  |└------->   |
+//  └-------->  / 
+
 // DOORS         NORTH        EAST       SOUTH        WEST       ENEMY1      ENEMY2     OBJECT3     FLOOR1      FLOOR2      FLOOR3      FLOOR4      FLOOR5
 //0b11001110, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
 //  ||||||||    ||||||||                                        ||||||||
@@ -75,14 +89,14 @@
 //  ||||||||    └-------->  /
 //  ||||||||
 //  ||||||||
-//  |||||||└->  DOOR WEST  is closed (0 = false / 1 = true)
-//  ||||||└-->  DOOR SOUTH is closed (0 = false / 1 = true)
-//  |||||└--->  DOOR EAST  is closed (0 = false / 1 = true)
-//  ||||└---->  DOOR NORTH is closed (0 = false / 1 = true)
-//  |||└----->  DOOR WEST  exists    (0 = false / 1 = true)
-//  ||└------>  DOOR SOUTH exists    (0 = false / 1 = true)
-//  |└------->  DOOR EAST  exists    (0 = false / 1 = true)
-//  └-------->  DOOR NORTH exists    (0 = false / 1 = true)
+//  |||||||└->  DOOR NORTH  is closed (0 = false / 1 = true)
+//  ||||||└-->  DOOR EAST   is closed (0 = false / 1 = true)
+//  |||||└--->  DOOR SOUTH  is closed (0 = false / 1 = true)
+//  ||||└---->  DOOR WEST   is closed (0 = false / 1 = true)
+//  |||└----->  DOOR NORTH  exists    (0 = false / 1 = true)
+//  ||└------>  DOOR EAST   exists    (0 = false / 1 = true)
+//  |└------->  DOOR SOUTH  exists    (0 = false / 1 = true)
+//  └-------->  DOOR WEST   exists    (0 = false / 1 = true)
 //
 //
 //
@@ -122,33 +136,18 @@
 //  └--------> NOT USED
 //
 //
-// NEXT LEVEL DOOR
-//0b00000001,
-//  |||||||└->  \  these 2 bits are used to determine what door is the next level door, make sure it exists
-//  ||||||└-->  /. NORTH = 0B00000000; EAST = 0B00000001; SOUTH = 0B00000010; WEST : 0B00000011
-//  |||||└--->  \ 
-//  ||||└---->   |
-//  |||└----->   | these 6 bits are used to set in which room the next level door is
-//  ||└------>   |
-//  |└------->   |
-//  └-------->  / 
+
 
 const unsigned char PROGMEM level01[] =
 {
-  8, // amount of rooms
-  2, // amount of transporters
-  3, // amount of influencing objects
+  2,          // amount of rooms
+  2,          // amount of transporters
+  3,          // amount of influencing objects 
+  0b00000000, // data about the door and room that gets you to the next level
+
   // DOORS         NORTH       EAST       SOUTH       WEST         ENEMY1      ENEMY2        OBJECT3       FLOOR1      FLOOR2      FLOOR3      FLOOR4      FLOOR5
-  0b01000000,   0b00000000, 0b00000111, 0b00000000, 0b00000000,   0b00000000, 0b00000000,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room00
-  0b10110000,   0b00001010, 0b00000000, 0b00001100, 0b00000001,   0b00100000, 0b00000000,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room01
-  0b00100000,   0b00000000, 0b00000000, 0b00000100, 0b00000000,   0b00000000, 0b00000000,   0b10100000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room02
-  0b11000000,   0b00000110, 0b00010011, 0b00000000, 0b00000000,   0b00000000, 0b00000000,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room03
-
-  0b00110000,   0b00000000, 0b00000000, 0b00010100, 0b00001101,   0b00000000, 0b11000001,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room04
-  0b10100000,   0b00010010, 0b00000000, 0b00011000, 0b00000000,   0b00000000, 0b00000000,   0b01100101,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room05
-  0b10010000,   0b00010110, 0b00000000, 0b00000000, 0b00011101,   0b00100000, 0b11000001,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room06
-  0b01000000,   0b00000000, 0b00011011, 0b00000000, 0b00000000,   0b00000000, 0b00000000,   0b01100110,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room07
-
+  0b00010001,   0b00000110, 0b00000000, 0b00000000, 0b00000000,   0b00000000, 0b00000000,   0b00001000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room1
+  0b01000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000,   0b00000000, 0b00000000,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room2
 //  0b11111001,   0b00000000, 0b00001111, 0b00000100, 0b00000000,   0b00000000, 0b00000000,   0b00000000,   0b00000000, 0b00001010, 0b00010010, 0b00011010, 0b00100010, // room00
 //  0b11000000,   0b00000010, 0b00001011, 0b00000000, 0b00000000,   0b00100000, 0b11000001,   0b01100110,   0b00001001, 0b00110001, 0b00000000, 0b00000000, 0b00000000, // room01
 //  0b10010000,   0b00001110, 0b00000000, 0b00000000, 0b00000101,   0b00000000, 0b00000000,   0b10100001,   0b01111011, 0b10000011, 0b10101011, 0b00000000, 0b00000000, // room02
@@ -160,7 +159,7 @@ const unsigned char PROGMEM level01[] =
 //  0b00010000,   0b00000000, 0b00000000, 0b00000000, 0b00001101,   0b00000000, 0b00000000,   0b00000000,   0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, // room07
 
   // transporters data, the order of the data is by ascending numbers
-  // ROOM+DIR
+  // ROOM + DIRECTION
   0b00000011,
   0b00000011,
 
@@ -169,9 +168,6 @@ const unsigned char PROGMEM level01[] =
   0b00000001,  0b00000001,
   0b00000011,  0b00000011,
   0b00000100,  0b00011111,
-
-  // data about the door and room that gets you to the next level
-  0b00000000
 };
 
 const unsigned char PROGMEM level02[] =

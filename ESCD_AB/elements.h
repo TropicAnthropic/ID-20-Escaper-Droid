@@ -43,6 +43,8 @@
 #define SCORE_LIFE                20
 #define SCORE_BULLET              30
 #define SCORE_CHIP                200
+#define SCORE_OPEN_DOOR           50
+#define SCORE_LEVEL_DOOR          1000
 
 
 byte objectFrame = 0;

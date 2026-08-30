@@ -83,6 +83,50 @@ void checkInputs()
   if (arduboy.justPressed(A_BUTTON))gameState = STATE_GAME_PAUSE;
   if (arduboy.justPressed(B_BUTTON))
   {
+    switch (player.characteristics & 0b00000011)  // check what direction droid is facing
+    {
+      case NORTH:
+        // OPEN A DOOR IF DROID HAS A WHITE CARD OR A BLACK CARD
+        if (player.isOnTile == 2)
+        {
+          playerChecksAndOpensDoor(NORTH);             // OPEN A DOOR IF DROID HAS A WHITE CARD WHITE CARD
+          playerChecksAndOpensLevelDoor(NORTH);        // OPEN THE LEVEL DOOR IF DROID HAS A BLACK CARD
+        }
+        // SWITCH ON/OFF
+        // SHOOT BULLET
+        break;
+      case EAST:
+        if (player.isOnTile == 10)
+        {
+          playerChecksAndOpensDoor(EAST);             // OPEN A DOOR IF DROID HAS A WHITE CARD WHITE CARD
+          playerChecksAndOpensLevelDoor(EAST);        // OPEN THE LEVEL DOOR IF DROID HAS A BLACK CARD
+        }
+
+        // SWITCH ON/OFF
+        // SHOOT BULLET
+        break;
+      case SOUTH:
+        if (player.isOnTile == 22)
+        {
+          playerChecksAndOpensDoor(SOUTH);             // OPEN A DOOR IF DROID HAS A WHITE CARD WHITE CARD
+          playerChecksAndOpensLevelDoor(SOUTH);        // OPEN THE LEVEL DOOR IF DROID HAS A BLACK CARD
+        }
+
+        // SWITCH ON/OFF
+        // SHOOT BULLET
+        break;
+      case WEST:
+        if (player.isOnTile == 14)
+        {
+          playerChecksAndOpensDoor(WEST);             // OPEN A DOOR IF DROID HAS A WHITE CARD WHITE CARD
+          playerChecksAndOpensLevelDoor(WEST);        // OPEN THE LEVEL DOOR IF DROID HAS A BLACK CARD
+        }
+
+        // SWITCH ON/OFF
+        // SHOOT BULLET
+        break;
+    }
+    
     // do an action
     // 
     // possible actions are:
