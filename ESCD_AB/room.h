@@ -143,7 +143,7 @@ void buildRooms(byte currentLevel)
     //Serial.println(stageRoom[roomNumber].elementsActive, BIN);
 
     // Third thing to do is to set the transporter data in the correct room
-    if ((pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + OBJECT_THREE + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]) & 0b00000111) == TELEPORT)
+    if ((pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + OBJECT + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]) & 0b00000111) == TELEPORT)
     {
       byte transportDataAtByte = ROOMS_DATA_START_AT_BYTE + (BYTES_USED_FOR_EVERY_ROOM * pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][AMOUNT_OF_ROOMS_AT_BYTE]));
       stageRoom[roomNumber].roomToTransportTo = pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][transportDataAtByte + transporterCounter]);
@@ -233,8 +233,8 @@ void enterRoom(byte roomNumber, byte currentLevel)
       elements[i].x = translateTileToX(currentTile);
       elements[i].y = translateTileToY(currentTile);
 
-      // get kind of sprite (stored in level data) and put it into the 3 most left bits
-      elements[i].characteristics = ((pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)])) & 0b00000111);
+      // get all the data stored in level data for each element (what tile it is on and white sprite to use)
+      elements[i].characteristics = ((pgm_read_byte(&levels[currentLevel - LEVEL_OFFSET][ELEMENTS_DATA_START_AT_BYTE + i + (BYTES_USED_FOR_EVERY_ROOM * roomNumber)]))); //& 0b00000111);
       //Serial.println(elements[i].characteristics, BIN);
 
       // we will always set the current direction to EAST (0b00001000)
@@ -478,12 +478,12 @@ const FunctionPointer PROGMEM  updateElementsInRoom[] =
 {
   drawEnemyOne,                     // 0
   drawEnemyTwo,                     // 1
-  drawObjectChangeable,             // 2
-  drawObjectFixedOne,               // 3
-  drawObjectFixedTwo,               // 4
-  drawObjectFixedThree,             // 5
-  drawObjectFixedFour,              // 6
-  drawObjectFixedFive,              // 7
+  drawObject,                       // 2
+  drawFloorOne,                     // 3
+  drawFloorTwo,                     // 4
+  drawFloorThree,                   // 5
+  drawFloorFour,                    // 6
+  drawFloorFive,                    // 7
   drawBulletEnemy,                  // 8
 
   drawPlayer,                       // 9
@@ -573,7 +573,7 @@ void checkOrderOfObjects(byte roomNumber, byte currentLevel)
   //determine what is on the tiles
   //******************************
   // check what tile the player is on (so that we can determine what order things need to be displayed)
-  if (!bitRead(player.characteristics, 5) && !bitRead(player.characteristics, 6))
+  if (!bitRead(player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5) && !bitRead(player.characteristics, DROID_COMES_OUT_DOOR_AT_BIT_6))
   {
     itemsOrder[player.isOnTile + ITEMS_ORDER_TILES_START] = PLAYER_DROID;
     //Serial.println(player.isOnTile);
@@ -583,20 +583,20 @@ void checkOrderOfObjects(byte roomNumber, byte currentLevel)
     switch (player.characteristics & 0b00000011)
     {
       case NORTH:
-        if (bitRead(player.characteristics, 5)) itemsOrder[2] = PLAYER_DROID;
-        if (bitRead(player.characteristics, 6)) itemsOrder[37] = PLAYER_DROID;
+        if (bitRead(player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5)) itemsOrder[2] = PLAYER_DROID;
+        if (bitRead(player.characteristics, DROID_COMES_OUT_DOOR_AT_BIT_6)) itemsOrder[37] = PLAYER_DROID;
         break;
       case EAST:
-        if (bitRead(player.characteristics, 5)) itemsOrder[7] = PLAYER_DROID;
-        if (bitRead(player.characteristics, 6)) itemsOrder[37] = PLAYER_DROID;
+        if (bitRead(player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5)) itemsOrder[7] = PLAYER_DROID;
+        if (bitRead(player.characteristics, DROID_COMES_OUT_DOOR_AT_BIT_6)) itemsOrder[37] = PLAYER_DROID;
         break;
       case SOUTH:
-        if (bitRead(player.characteristics, 5)) itemsOrder[37] = PLAYER_DROID;
-        if (bitRead(player.characteristics, 6)) itemsOrder[2] = PLAYER_DROID;
+        if (bitRead(player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5)) itemsOrder[37] = PLAYER_DROID;
+        if (bitRead(player.characteristics, DROID_COMES_OUT_DOOR_AT_BIT_6)) itemsOrder[2] = PLAYER_DROID;
         break;
       case WEST:
-        if (bitRead(player.characteristics, 5)) itemsOrder[42] = PLAYER_DROID;
-        if (bitRead(player.characteristics, 6)) itemsOrder[7] = PLAYER_DROID;
+        if (bitRead(player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5)) itemsOrder[42] = PLAYER_DROID;
+        if (bitRead(player.characteristics, DROID_COMES_OUT_DOOR_AT_BIT_6)) itemsOrder[7] = PLAYER_DROID;
         break;
     }
   }
@@ -674,13 +674,13 @@ void drawHUD()
 
   //draw amount of black cards
   //drawNumbers(123, 53, (player.assets & 0b00100000) >> 5, SMALL_FONT);
-  drawNumbers(123, 53,((bitRead(player.assets,5)) == 0) ? 0 : 1, SMALL_FONT);
+  drawNumbers(123, 53,((bitRead(player.assets,DROID_HAS_BLACK_CARD_AT_BIT_5)) == 0) ? 0 : 1, SMALL_FONT);
   sprites.drawSelfMasked(121, 59, hudBlackCard, 0);
 
   //draw life
-  if bitRead(player.characteristics,4) bitSet(player.assets,6);
-  else if (arduboy.everyXFrames(20) && (player.life < 2)) bitToggle(player.assets,6);
-  if (bitRead(player.assets, 6)) sprites.drawSelfMasked(122, 11, hudLife, player.life);
+  if bitRead(player.characteristics,DROID_DYING_AT_BIT_4) bitSet(player.assets,DROID_BATTERY_VISIBLE_AT_BIT_6);
+  else if (arduboy.everyXFrames(20) && (player.life < 2)) bitToggle(player.assets,DROID_BATTERY_VISIBLE_AT_BIT_6);
+  if (bitRead(player.assets, DROID_BATTERY_VISIBLE_AT_BIT_6)) sprites.drawSelfMasked(122, 11, hudLife, player.life);
 }
 
 

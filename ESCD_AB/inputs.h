@@ -86,42 +86,79 @@ void checkInputs()
     switch (player.characteristics & 0b00000011)  // check what direction droid is facing
     {
       case NORTH:
-        // OPEN A DOOR IF DROID HAS A WHITE CARD OR A BLACK CARD
-        if (player.isOnTile == 2);
+        // OPEN A DOOR/LEVELDOOR IF DROID HAS A WHITE/BLACK CARD
+        if (player.isOnTile == TILE_INFRONT_DOOR_NORTH);
         {
           playerChecksAndOpensDoor(NORTH);             // OPEN A DOOR IF DROID HAS A WHITE CARD WHITE CARD
           playerChecksAndOpensLevelDoor(NORTH);        // OPEN THE LEVEL DOOR IF DROID HAS A BLACK CARD
+        }
+        // TRANSPORT
+        // Has currentRoom a transporter
+        if ((elements[2].characteristics & 0b00000111)==TELEPORT)
+        {
+          if (((elements[2].characteristics & 0b11111000)>>3) == (player.isOnTile - 5))
+          {
+            bitSet(player.characteristics,DROID_TRANSPORTING_AT_BIT_7);
+            gameState = STATE_GAME_TRANSPORTING;
+          }
         }
         // SWITCH ON/OFF
         // SHOOT BULLET
         break;
       case EAST:
-        if (player.isOnTile == 10)
+        // OPEN A DOOR/LEVELDOOR IF DROID HAS A WHITE/BLACK CARD
+        if (player.isOnTile == TILE_INFRONT_DOOR_EAST)
         {
           playerChecksAndOpensDoor(EAST);             // OPEN A DOOR IF DROID HAS A WHITE CARD WHITE CARD
           playerChecksAndOpensLevelDoor(EAST);        // OPEN THE LEVEL DOOR IF DROID HAS A BLACK CARD
         }
-
+        // TRANSPORT
+          if ((elements[2].characteristics & 0b00000111)==TELEPORT)
+        {
+          if (((elements[2].characteristics & 0b11111000)>>3)== (player.isOnTile - 1))
+          {
+            bitSet(player.characteristics,DROID_TRANSPORTING_AT_BIT_7);
+            gameState = STATE_GAME_TRANSPORTING;
+          }
+        }
         // SWITCH ON/OFF
         // SHOOT BULLET
         break;
       case SOUTH:
-        if (player.isOnTile == 22)
+      // OPEN A DOOR/LEVELDOOR IF DROID HAS A WHITE/BLACK CARD
+        if (player.isOnTile == TILE_INFRONT_DOOR_SOUTH)
         {
           playerChecksAndOpensDoor(SOUTH);             // OPEN A DOOR IF DROID HAS A WHITE CARD WHITE CARD
           playerChecksAndOpensLevelDoor(SOUTH);        // OPEN THE LEVEL DOOR IF DROID HAS A BLACK CARD
         }
-
+        // TRANSPORT
+           if ((elements[2].characteristics & 0b00000111)==TELEPORT)
+        {
+          if (((elements[2].characteristics & 0b11111000)>>3)== (player.isOnTile + 5))
+          {
+            bitSet(player.characteristics,DROID_TRANSPORTING_AT_BIT_7);
+            gameState = STATE_GAME_TRANSPORTING;
+          }
+        }
         // SWITCH ON/OFF
         // SHOOT BULLET
         break;
       case WEST:
-        if (player.isOnTile == 14)
+      // OPEN A DOOR/LEVELDOOR IF DROID HAS A WHITE/BLACK CARD
+        if (player.isOnTile == TILE_INFRONT_DOOR_WEST)
         {
           playerChecksAndOpensDoor(WEST);             // OPEN A DOOR IF DROID HAS A WHITE CARD WHITE CARD
           playerChecksAndOpensLevelDoor(WEST);        // OPEN THE LEVEL DOOR IF DROID HAS A BLACK CARD
         }
-
+        // TRANSPORT
+           if ((elements[2].characteristics & 0b00000111)==TELEPORT)
+        {
+          if (((elements[2].characteristics & 0b11111000)>>3)== (player.isOnTile + 1))
+          {
+            bitSet(player.characteristics,DROID_TRANSPORTING_AT_BIT_7);
+            gameState = STATE_GAME_TRANSPORTING;
+          }
+        }
         // SWITCH ON/OFF
         // SHOOT BULLET
         break;

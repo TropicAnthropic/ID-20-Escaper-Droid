@@ -5,7 +5,7 @@
 
 #define ENEMY_ONE                 0
 #define ENEMY_TWO                 1
-#define OBJECT_THREE              2
+#define OBJECT                    2
 #define FLOOR_ONE                 3
 #define FLOOR_TWO                 4
 #define FLOOR_THREE               5
@@ -30,7 +30,7 @@
 #define PICKUP_CHIP               4     // extra points
 #define TELEPORT                  5     // TELEPORT
 #define SWITCH_OFF                6     // TOGGLE ELEMENTS IS OFF
-#define SWITCH_ON                 7     // TOGGLE ELEMENTS IS OFF
+#define SWITCH_ON                 7     // TOGGLE ELEMENTS IS ON
 
 #define FLOOR_TILE                0
 #define FLOOR_BOX                 1
@@ -47,14 +47,11 @@
 #define SCORE_OPEN_DOOR           50
 #define SCORE_LEVEL_DOOR          1000
 
-
-byte objectFrame = 0;
-
 struct Element
 {
   public:
     int x, y;
-    byte characteristics = 0b00000000;   //this byte holds all the enemies characteristics
+    byte characteristics = 0b00000000;   //this byte holds all the enemies / object / floors / enemie bullet characteristics
     //                       ||||||||
     //                       |||||||└->  0 \
     //                       ||||||└-->  1  | these 3 bits are used to determine kind of sprite to use
@@ -67,10 +64,27 @@ struct Element
     byte frame;
 };
 
+///// PREPARE ENEMY / ELEMENT / FLOOR ///////
+/////////////////////////////////////////////
+// create 9 places for the elements to be stored
+// place 0 ENEMY_ONE      4 different types
+// place 1 ENEMY_TWO      4 different types
+// place 2 OBJECT         . different types
+// place 3 FLOOR_ONE      4 different types
+// place 4 FLOOR_TWO      4 different types
+// place 5 FLOOR_THREE    4 different types
+// place 6 FLOOR_FOUR     4 different types
+// place 7 FLOOR_FIVE     4 different types
+// place 8 ENEMY_BULLET   4 different types
 Element elements[8];
+
+// create a byte for the the object frame
+byte objectFrame = 0;
+
 
 ///////////////// DRAW ENEMIES //////////////
 /////////////////////////////////////////////
+// We have 4 different enemy types and 2 enemies we can draw
 void drawEnemies(bool enemyOneOrTwo)
 {
   switch (elements[enemyOneOrTwo].characteristics & 0b00000111)
@@ -91,53 +105,61 @@ void drawEnemies(bool enemyOneOrTwo)
 
 void drawEnemyOne()
 {
-  drawEnemies(0);
+  drawEnemies(ENEMY_ONE);
 }
 
 void drawEnemyTwo()
 {
-  drawEnemies(1);
+  drawEnemies(ENEMY_TWO);
 }
 
 
 
-///////////////// DRAW ELEMENTS /////////////
+////////////////// DRAW OBJECT //////////////
 /////////////////////////////////////////////
-void drawObjectChangeable()
+// We have ... different object types and only 1 object we can draw
+void drawObject()
 {
-  if (arduboy.everyXFrames(8)) elements[2].frame = (++elements[2].frame) % 6;
-  sprites.drawPlusMask(elements[2].x + 4, elements[2].y + currentRoomY + 6, elements_plus_mask, elements[2].frame + (6 * ((elements[2].characteristics & 0b00000111))));
+  if (arduboy.everyXFrames(8)) elements[OBJECT].frame = (++elements[OBJECT].frame) % 6;
+  sprites.drawPlusMask(elements[OBJECT].x + 4, elements[OBJECT].y + currentRoomY + 6, elements_plus_mask, elements[OBJECT].frame + (6 * ((elements[OBJECT].characteristics & 0b00000111))));
 }
 
 ///////////////// DRAW SPECIAL FLOOR ////////
 /////////////////////////////////////////////
-
-void drawObjectFixedOne()
+// We have 4 different floor types and 5 floor tiles we can draw
+void drawFloor(byte floor)
 {
-  sprites.drawPlusMask(elements[3].x - 3, elements[3].y + currentRoomY + 9, floorTile_plus_mask, ((elements[3].characteristics & 0b00000111)));
+  sprites.drawPlusMask(elements[floor].x - 3, elements[floor].y + currentRoomY + 9, floorTile_plus_mask, ((elements[floor].characteristics & 0b00000111)));
 }
 
-void drawObjectFixedTwo()
+void drawFloorOne()
 {
-  sprites.drawPlusMask(elements[4].x - 3, elements[4].y + currentRoomY + 9, floorTile_plus_mask, ((elements[4].characteristics & 0b00000111)));
+  drawFloor(FLOOR_ONE);
 }
 
-void drawObjectFixedThree()
+void drawFloorTwo()
 {
-  sprites.drawPlusMask(elements[5].x - 3, elements[5].y + currentRoomY + 9, floorTile_plus_mask, ((elements[5].characteristics & 0b00000111)));
+  drawFloor(FLOOR_TWO);
 }
 
-void drawObjectFixedFour()
+void drawFloorThree()
 {
-  sprites.drawPlusMask(elements[6].x - 3, elements[6].y + currentRoomY + 9, floorTile_plus_mask, ((elements[6].characteristics & 0b00000111)));
+  drawFloor(FLOOR_THREE);
 }
 
-void drawObjectFixedFive()
+void drawFloorFour()
 {
-  sprites.drawPlusMask(elements[7].x - 3, elements[7].y + currentRoomY + 9, floorTile_plus_mask, ((elements[7].characteristics & 0b00000111)));
+  drawFloor(FLOOR_FOUR);
 }
 
+void drawFloorFive()
+{
+  drawFloor(FLOOR_FIVE);
+}
 
+///////////////// DRAW ENEMIE BULLET ////////
+/////////////////////////////////////////////
+// We have 1 different bullet types and 1 bullet tiles we can draw
 void drawBulletEnemy()
 {
 

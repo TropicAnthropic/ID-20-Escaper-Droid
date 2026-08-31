@@ -4,14 +4,14 @@ Code for the game Escaper Droid for Arduboy
 # small roadmap
 
 - [ ] Action button
-    - [ ] Check collision type
-    - [ ] return collision type
+    - [x] Check collision type
+    - [x] return collision type
     - [ ] Action according to type
-        - [ ] Open Closed room door
-        - [ ] Open Closed level door
+        - [x] Open Closed room door
+        - [x] Open Closed level door
         - [ ] Switch ON/OFF
         - [ ] Shoot bullet
-        - [ ] Do nothing
+        - [x] Do nothing
 - [ ] Change pause screen
     - [x] Remove pause bitmap
     - [x] Show Empty room
@@ -36,14 +36,14 @@ Code for the game Escaper Droid for Arduboy
 - [ ] Change GAME OVER screen
     - [x] Remove game over bitmap.
     - [ ] Show the droid dying, turning around.
-    - [ ] Show dead droid (new bitmap)
+    - [x] Show dead droid (new bitmap)
     - [ ] Add little game over song
     - [ ] Show score
 - [ ] Add score to the game
-    - [ ] Decide how to get points
+    - [x] Decide how to get points
         - [ ] Next level
-        - [ ] Find key
-        - [ ] Use key
+        - [x] Find key
+        - [x] Use key
     - [ ] Maybe a time element?
 - [ ] Option for changing the d-pad
     - [x] Add an option to the config menu

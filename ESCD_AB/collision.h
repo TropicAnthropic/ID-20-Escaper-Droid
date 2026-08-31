@@ -56,7 +56,7 @@ void setPlayerWalkingThroughDoor()
           (!bitRead(stageRoom[currentRoom].doorsClosedActive, NORTH_DOOR_IS_CLOSSED))       // the door is not closed
          )
       {
-        bitSet (player.characteristics, 5);                                                 // if all above, set the droid is walking through the door
+        bitSet (player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5);                                                 // if all above, set the droid is walking through the door
         player.x = translateTileToX(2);
         player.y = translateTileToY(2) + currentRoomY;
       }
@@ -67,7 +67,7 @@ void setPlayerWalkingThroughDoor()
           (!bitRead(stageRoom[currentRoom].doorsClosedActive, EAST_DOOR_IS_CLOSSED))        // the door is not closed
          )
       {
-        bitSet (player.characteristics, 5);                                                 // if all above, set the droid is walking through the door
+        bitSet (player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5);                                                 // if all above, set the droid is walking through the door
         player.x = translateTileToX(10);
         player.y = translateTileToY(10) + currentRoomY;
       }
@@ -78,7 +78,7 @@ void setPlayerWalkingThroughDoor()
           (!bitRead(stageRoom[currentRoom].doorsClosedActive, SOUTH_DOOR_IS_CLOSSED))       // the door is not closed
          )
       {
-        bitSet (player.characteristics, 5);                                                 // if all above, set the droid is walking through the door
+        bitSet (player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5);                                                 // if all above, set the droid is walking through the door
         player.x = translateTileToX(22);
         player.y = translateTileToY(22) + currentRoomY;
       }
@@ -89,7 +89,7 @@ void setPlayerWalkingThroughDoor()
           (!bitRead(stageRoom[currentRoom].doorsClosedActive, WEST_DOOR_IS_CLOSSED))        // the door is not closed
          )
       {
-        bitSet (player.characteristics, 5);                                                  // if all above, set the droid is walking through the door
+        bitSet (player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5);                                                  // if all above, set the droid is walking through the door
         player.x = translateTileToX(14);
         player.y = translateTileToY(14) + currentRoomY;
       }
@@ -211,8 +211,8 @@ void checkObjectTypeAndAct()
       scorePlayer += SCORE_CHIP;
       break;
     case TELEPORT:          // TELEPORT
-      bitSet(player.characteristics,7);
-      gameState = STATE_GAME_TRANSPORTING;
+      //bitSet(player.characteristics,DROID_TRANSPORTING_AT_BIT_7);
+      //gameState = STATE_GAME_TRANSPORTING;
       break;
     case SWITCH_OFF:        // SWITCH OFF
       break;
@@ -232,7 +232,7 @@ void decideOnCollision()
       break;
     case ENEMY_TWO:
       break;
-    case OBJECT_THREE:
+    case OBJECT:
       //Serial.print(" switching");
       checkObjectTypeAndAct();
       //itemsOrder[testingTile + ITEMS_ORDER_TILES_START] = 0;

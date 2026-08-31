@@ -3,12 +3,27 @@
 
 #include "globals.h"
 
-#define PLAYER_DROID              9
-#define PLAYER_BULLET             10
-#define PLAYER_IMMUNE_TIME        240
-#define PLAYER_TRANSPORTING_TIME  90
+#define PLAYER_DROID                      9
+#define PLAYER_BULLET                     10
+#define PLAYER_IMMUNE_TIME                240
+#define PLAYER_TRANSPORTING_TIME          90
 
-#define PLAYER                    1
+#define PLAYER                            1
+
+#define DROID_FACING_NORTH                NORTH
+#define DROID_FACING_EAST                 EAST
+#define DROID_FACING_SOUTH                SOUTH
+#define DROID_FACING_WEST                 WEST
+
+#define DROID_VISIBLE_AT_BIT_2            2
+#define DROID_IMMUNE_AT_BIT_3             3
+#define DROID_DYING_AT_BIT_4              4
+#define DROID_GOES_THROUGH_DOOR_AT_BIT_5  5
+#define DROID_COMES_OUT_DOOR_AT_BIT_6     6
+#define DROID_TRANSPORTING_AT_BIT_7       7
+
+#define DROID_HAS_BLACK_CARD_AT_BIT_5     5
+#define DROID_BATTERY_VISIBLE_AT_BIT_6    6
 
 
 
@@ -58,7 +73,7 @@ EscaperDroid player;
 
 void walkThroughDoor()
 {
-  if (bitRead(player.characteristics, 5) || bitRead(player.characteristics, 6)) player.steps++;
+  if (bitRead(player.characteristics, DROID_GOES_THROUGH_DOOR_AT_BIT_5) || bitRead(player.characteristics, DROID_COMES_OUT_DOOR_AT_BIT_6)) player.steps++;
   switch (player.characteristics & 0b00000011)
   {
     case NORTH:
@@ -86,14 +101,14 @@ void walkThroughDoor()
 
 void playerLosesLife()
 {
-  if (!bitRead(player.characteristics, 3))
+  if (!bitRead(player.characteristics, DROID_IMMUNE_AT_BIT_3))
   {
     player.life--;
-    bitSet(player.characteristics, 3);
+    bitSet(player.characteristics, DROID_IMMUNE_AT_BIT_3);
     if (player.life < 1)
     {
-      bitSet(player.characteristics, 4);                              // set droid is dying
-      bitClear(player.characteristics, 3);                            // set droid not immune
+      bitSet(player.characteristics, DROID_DYING_AT_BIT_4);                              // set droid is dying
+      bitClear(player.characteristics, DROID_IMMUNE_AT_BIT_3);                           // set droid not immune
     }
   }
 }
@@ -101,19 +116,19 @@ void playerLosesLife()
 void updatePlayer()
 {
   //Serial.println(player.immuneTimer);
-  if (bitRead(player.characteristics, 3))
+  if (bitRead(player.characteristics, DROID_IMMUNE_AT_BIT_3))
   {
     player.immuneTimer++;
-    if (arduboy.everyXFrames(4)) bitToggle(player.characteristics,2);
+    if (arduboy.everyXFrames(4)) bitToggle(player.characteristics,DROID_VISIBLE_AT_BIT_2);
     bitToggle(player.characteristics,2);
     if (player.immuneTimer > PLAYER_IMMUNE_TIME)
     {
-      bitClear(player.characteristics, 3);
-      bitSet(player.characteristics, 2);
+      bitClear(player.characteristics, DROID_IMMUNE_AT_BIT_3);
+      bitSet(player.characteristics, DROID_VISIBLE_AT_BIT_2);
       player.immuneTimer = 0;
     }
   }
-  else if (bitRead(player.characteristics, 4)) gameState = STATE_GAME_OVER;
+  else if (bitRead(player.characteristics, DROID_DYING_AT_BIT_4)) gameState = STATE_GAME_OVER;
 }
 
 void playerDies()
@@ -131,8 +146,8 @@ void playerTransporting()
   }
   if (player.transportTimer > PLAYER_TRANSPORTING_TIME)
   {
-    bitSet(player.characteristics,2);
-    bitClear(player.characteristics,7);
+    bitSet(player.characteristics,DROID_VISIBLE_AT_BIT_2);
+    bitClear(player.characteristics,DROID_TRANSPORTING_AT_BIT_7);
     player.transportTimer = 0;
     gameState = STATE_GAME_PLAYING;
 
@@ -144,13 +159,13 @@ void drawPlayer()
 {
   byte counter = player.characteristics & 0b00000011;
   byte counterTwice = 2*counter;
-  if (bitRead(player.characteristics, 7))
+  if (bitRead(player.characteristics, DROID_TRANSPORTING_AT_BIT_7))
   {
     for (byte i = 0; i<17;i=i+8) sprites.drawPlusMask(player.x-4, player.y-6 + i - counterTwice, transportBeams_plus_mask,0);
   }
-  if (bitRead(player.characteristics, 4)) sprites.drawPlusMask(player.x, player.y, droid_plus_mask, 4);
-  else if (bitRead(player.characteristics, 2)) sprites.drawPlusMask(player.x, player.y, droid_plus_mask, counter);
-  if (bitRead(player.characteristics, 7))
+  if (bitRead(player.characteristics, DROID_DYING_AT_BIT_4)) sprites.drawPlusMask(player.x, player.y, droid_plus_mask, 4);
+  else if (bitRead(player.characteristics, DROID_VISIBLE_AT_BIT_2)) sprites.drawPlusMask(player.x, player.y, droid_plus_mask, counter);
+  if (bitRead(player.characteristics, DROID_TRANSPORTING_AT_BIT_7))
   {
     for (byte i = 0; i<17;i=i+8)sprites.drawPlusMask(player.x-4, player.y+2 + i - counterTwice, transportBeams_plus_mask,1);
   }
